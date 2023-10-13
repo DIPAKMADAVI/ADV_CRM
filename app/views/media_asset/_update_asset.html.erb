@@ -1,0 +1,134 @@
+
+
+<%= form_with(url:form_url , method:form_method,  id:form_action) do |f| %>
+
+
+         <div  id= "" class="form-group m-2"  >
+          <label for="exampleFormControlSelect1">Type of Adv</label>
+              <%= f.select :media_type, options_for_select(type_of_adv_channel), { include_blank: 'select a media', name:'media_asset[:media_type]' }, { class: 'form-control' } %>
+          </div>
+
+         <div class="form-row">
+             <div class="form-group m-4">
+               <label for="inputEmail4">Select State</label>
+               <%= f.select(:state, options_for_select(select_all_state), {include_blank: 'select a state'},{ class:'form-control'}) %>
+
+             </div>
+             <div class="form-group m-4">
+               <label for="inputPassword4">Select City</label>
+               <%= f.select(:district, options_for_select(select_all_district), {include_blank: 'select a district'} ,{class:'form-control'}) %>
+             </div>
+         </div>
+
+         <input type="hidden" name="my_value" id="media_type" value="">
+  
+        <div id="bannerdiv">
+          <span id="title" class="fs-5"> media types details  </span>
+            <div class="form-row" id ="div1_redio">
+                 <div class="form-group col-md-4">
+                     <label for="inputPassword4">Sub Media</label>
+                     <% redio_sub_channel = AdvChannel.where(channel_name:"Redio").select(:district).pluck(:sub_channal_name,:id) %>
+                     <%= f.select(:sub_media_type_1, options_for_select(redio_sub_channel),{ include_blank: 'select sub media'},{class:'form-control' }) %>               
+                 </div>
+             </div>
+
+              <div id ="div2_newspaper">
+                 <div class="form-group col-md-4" >
+                     <label for="inputPassword4">Sub Media</label>
+                     <% newspaper_sub_channel = AdvChannel.where(channel_name:"Newspaper").select(:district).pluck(:sub_channal_name,:id) %>
+                     <%= f.select(:sub_media_type_2, options_for_select(newspaper_sub_channel),{ include_blank: 'select sub media'},{class:'form-control' }) %>
+                 </div>
+
+              
+                 <div class="form-group col-md-4">
+                   <label for="inputEmail4">Enter Town</label>
+                   <%= f.text_field :news_twon, placeholder:'Enter area name', class: 'form-control'  %>
+                 </div>
+    
+
+                 <div class="form-group col-md-4">
+                 <label for="inputPassword4">Dimentions</label>
+                 <%= f.text_field :news_dimentions, placeholder:'Enter dimentions(00 x 00.cm )' , class: 'form-control' %>
+                </div>
+
+              </div>
+
+
+                 
+
+            <div id ="div3_hoarding">
+                  <div class="form-group col-md-4">
+                     <label for="inputPassword4">Sub Media</label>
+                     <% hoarding_sub_channel = AdvChannel.where(channel_name:"Hoarding").select(:district).pluck(:sub_channal_name,:id) %>
+                     <%= f.select(:sub_media_type_3, options_for_select(hoarding_sub_channel),{ include_blank: 'select sub media'},{class:'form-control' }) %>       
+                 </div>
+
+                <div class="form-row">
+                 <div class="form-group m-2">
+                   <label for="inputEmail4">Enter Town</label>
+                   <%= f.text_field :hoarding_town, placeholder:'Enter area name', class: 'form-control'  %>
+                 </div>
+    
+                 <div class="form-group m-2">
+                   <label for="inputPassword4">Enter Area</label>
+                   <%= f.text_field :area, placeholder:'Enter area name' , class: 'form-control' %>
+                    <%#= form.text_field :hording_area, placeholder:'Enter area name' , class: 'form-control'%>
+                 </div>
+                </div>
+
+                 <div class="form-group col-md-4">
+                   <label for="inputPassword4">Dimentions</label>
+                   <%= f.text_field :hording_dimentions, placeholder:'Enter dimentions(00 x 00.ft )' , class: 'form-control' %>
+                </div>
+
+               <div class="form-group col-md-4">
+                <label for="inputPassword4">Count</label>
+                 <%= f.text_field :number_of_count, placeholder:'Enter number count ' , class: 'form-control' %>
+               </div>
+
+              </div>
+               <div class="modal-footer">                
+                <button type="button" class=" btn btn-secondary"  onclick="closeModal()"  data-dismiss="modal">Close</button>                        
+                  <%= f.submit :'Clear Form', type:'reset', class:'btn btn-warnning' %>
+                  <%= f.submit form_action + ' Media Asset', class:'btn btn-primary' %>
+              </div>
+
+             </div>
+          </div>
+             
+         </div>
+
+<% end %>
+
+
+
+<script>
+
+$(document).ready(function() {
+  $("#Add_Asset").on("click", function() {
+    $("#Add_Asset_model").modal('show');
+  });
+  
+
+  $("#div1_redio, #div2_newspaper, #div3_hoarding").hide();
+  $("#media_type").on("change", function() {
+    var selectedOption = $(this).val();
+    $("#title").html(selectedOption + " Details")
+  $("#div1_redio, #div2_newspaper, #div3_hoarding").hide();
+ 
+  
+  if (selectedOption === "Redio") {
+    $("#div1_redio").show();
+  } else if (selectedOption === "Newspaper") {
+    $("#div2_newspaper").show();
+  } else if (selectedOption === "Hoarding") {
+    $("#div3_hoarding").show();
+  }
+  })
+})
+
+
+
+
+
+</script>

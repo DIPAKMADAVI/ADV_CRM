@@ -1,0 +1,174 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class=" tp-0 table-headtitle1">
+
+    
+    <div class="col-sm-8">
+        <%= search_form_for @q, url: create_campaigin_path, method: :get do |f| %>
+                <div class="row d-flex align-items-center justify-content-around firstbar m-2 pt-0">
+   
+                <div class="form-group col-md-3 pt-0 " >
+                    <label class="text-secondary text-xs">Customer Name </label>
+                     <%= f.text_field :customer_name_cont, placeholder: 'EnterCustomer name ', class: 'form-control' %>
+                </div>
+                
+                <div class="form-group col-md-3 pt-0" >
+                    <label class="text-secondary text-xs">Media Type </label>
+                    <%=f.text_field :selected_media_cont,  placeholder: 'Enter  Media',  class: 'form-control' %>              
+                   
+                    <%#=f.text_filed : selected_media_cont, placeholder: 'EnterCustomer name ', class: 'form-control' %>              
+                </div>
+
+
+                <div class="form-group col-md-3">
+                <label class="text-secondary text-xs">Adv Title</label>
+                <%= f.text_field :title_of_adv_cont, placeholder: 'Enter the Title', class: 'form-control' %>
+                </div>
+
+                    <div class="form-group col-md-3 pt-3 d-flex justify-content-center">
+                    <%= f.submit :'Clear Form', type:'reset', class:'btn btn-dark m-1' %>
+                    <button class="btn btn-primary m-1" >Search</button>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+
+       
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#Add_User_model"> Configure Adv </button>
+            <%= link_to "Active Adver Plan", adver_action_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%#= link_to "Remove User", adver_action_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-headtitle">
+<h4><div id="Media_Asset_Count">Total Advertiselent Plan  - ( <%= @advertisement_plan_info.count %> ) </div> </h4>
+</div>
+
+
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Sr.No</th>
+            <th scope="col">Adver Title</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Business Name</th>
+            <th scope="col"> Adver Status </th>
+            <th scope="col">Scheme & Count </th>
+            <th scope="col">Selected Plan No</th>
+            <th scope="col">Action </th>
+            </tr>
+        </thead>  
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @advertisement_plan_info.each do |adv| %> 
+                <% plan_all = SelectedPlan.where(advertisement_detail_id:adv.id ) %>
+                <%#= debugger %>
+                <%#= plan_count =plan_all.where(plan_all.advertisement_detail_id = adv.advertisement_detail_id).count if plan_all.present?  %>
+                <tr >
+                    <td ><%= ser_no %></td>
+                    <td ><%= adv.title_of_adv%></td>
+                    <td ><%= adv.customer_name %></td>
+                    <td ><%= adv.business_details.business_name %></td>
+                    <td ><%= adv.adv_plan_status%></td>
+                    <td ><%= adv.selected_media %></td>
+                    <td ><%= plan_all.count %></td>
+                    <td> 
+                    <div class="actions-icons"> 
+  
+                            <button class="deletebtn" onclick=" add_campaign ('<%= adv.id %>','add')">
+                            <img src="../../assets/campaign.svg" class="action-icons-svg" alt="">
+                            </button>
+
+                            <button class="deletebtn" onclick="edit_advertisement_plan_infos('<%= adv.id %>','AD_Update')">
+                                <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                            </button>
+
+
+                            <button class="deletebtn"  onclick="edit_advertisement_plan_infos('<%= adv.id %>','AD_View')" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                            </button>    
+                        </div>
+                    </td>
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @advertisement_plan_info , class: 'custom-pagination' %>
+    
+    <%#= will_paginate @media_asset ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Add Capmaign Details -->
+
+    <!-- Modal Start Edit -->
+<div class="modal modalleng2 fade" id="create_campaign_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Update Customer and Advertisement </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">            
+             <%= render 'campaign/camp_form', form_method: 'post', form_action: 'update', form_url: "customer_update_path" %>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Close  -->
+
+
+
+
+<script>
+
+
+
+function closeModal() {
+  $('#create_campaign_model').modal('hide') 
+  //$("#Add")[0].reset()
+  }
+
+  function add_customer() {
+    $('#add_new_customer').modal('show');
+  }
+
+
+function add_campaign(camp_id,camp_action){
+let id = camp_id
+
+$.ajax({
+    url: `/fetch_records_for_camp/${id}`, 
+    method: 'GET',
+    dataType: 'json', 
+    success: function(data) {
+      console.log(data); 
+    },
+   })
+
+
+    $('#create_campaign_model').modal('show')
+    //$('#cust_delete_id').val(cust_id)
+   }
+
+function adv_details(id){
+  //$('#add_advertisement').modal('show')
+  }
+</script>

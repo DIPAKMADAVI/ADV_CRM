@@ -1,0 +1,60 @@
+<section class="vh-100 log-in" >
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card" style="border-radius: 1rem;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <%= image_tag 'logo.jpg',  class:'img-fluid', style:'border-radius: 1rem 0 0 1rem' %>
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+
+
+              <%= form_with(url: login_path) do |f| %>
+              
+                    <div class="d-flex align-items-center mb-3 pb-1">
+                         <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                         <span class="h4 fw-bold mb-0">Varsha Brandwave</span>
+                     </div>
+  
+                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
+                    
+                    <% if flash[:alert].present? %>
+                    <div class="alert alert-danger">
+                    <span  id="error_text" style="color: red;"><%= flash[:alert] %></span>
+                    </div>
+                    <% end %>
+
+
+                       <div class="form-outline mb-4">
+                         <span class="form-label">Email Id</span></br>
+                         <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email Id", class: "form-control form-control-lg", required: true, validate: true %>
+                       </div>
+
+                       <div class="form-outline mb-4">
+                         <span class="form-label">Password</span><br>
+                         <%= f.password_field :password, autofocus: true, autocomplete: "password", placeholder: "Password", class: "form-control form-control-lg", required: true, validate: true %>
+                       </div>
+
+                    <div class="pt-1 mb-4">
+                       <%= f.submit "Log in", class: "button" %>
+                     </div>
+
+                     <a class="small text-muted" href="#!">Forgot password?</a>
+<br>
+                     <a href="#!" class="small text-muted">Terms of use.</a>
+                     <a href="#!" class="small text-muted">Privacy policy</a>
+               
+              <%end %>
+                 
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

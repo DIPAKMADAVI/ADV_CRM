@@ -1,0 +1,36 @@
+
+<!-- Navbar Content Start -->
+    <section id="content">
+        <nav class="nav-cont">
+            <div class="icc">
+            <%= image_tag 'Img/menu.svg',  width:'20px' %>
+            </div>
+
+            <% if flash[:notice].present? %>
+                    <div id="flsh-msg" class="alert alert-success">
+                    <span  id="error_text" style="color: green;"><%= flash[:notice] %></span>
+                    </div>
+                  <% end %>
+            <% if flash[:alert].present? %>
+                <div class="alert alert-danger">
+                <span  id="error_text" style="color: red;"><%= flash[:alert] %></span>
+                </div>
+            <% end %>
+
+            <div class="end-icons">
+                <a href="#" cllogout_pathass="notification">
+                <%= image_tag 'Img/bell.svg',  width:'20px' %>
+                    <span class="num">3</span>
+                </a>
+                <a href="" class="profile">
+                <%= image_tag '' %>
+                <%= link_to 'Sign Out', dipak_path  %>
+               
+                </a>
+            </div>
+                </nav>
+    </section>
+    <!-- Navbar Content End-->
+
+ </div>
+

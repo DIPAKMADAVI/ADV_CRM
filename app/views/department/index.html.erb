@@ -1,0 +1,393 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+        <div class="col-sm-8">
+
+        <%= search_form_for @q, url: department_path do |f| %>
+            
+
+        <%#= form_with(model: @q, url: 'department', method: :get) do |f|   %>
+            <div class="row d-flex align-items-center justify-content-around firstbar pt-0">
+                <div class="form-group col-md-3 pt-0 " >
+                <label class="text-secondary text-xs">Department</label>
+                <%=f.select :dept_name_cont, options_for_select(select_all_department), {prompt: "Select Department"}, { class: 'form-control'} %>              
+                </div>
+                <div class="form-group col-md-3 pt-0" >
+                <%#= label_tag :state, " Select State" %>
+                <label class="text-secondary text-xs">State</label>
+                <%=f.select :dept_state_eq, options_for_select(select_dept_state), {prompt: "Select State"}, { class: 'custom-select'} %>              
+
+                </div>
+                <div class="form-group col-md-3" pt-0>
+                <%#= label_tag :city, "Select City" %>
+                <label class="text-secondary text-xs">City</label>
+                <%=f.select :city_eq, options_for_select(select_dept_city), {prompt: "Select  City"}, { class: 'custom-select'} %>              
+
+                </div>
+                
+                <div class="form-group col-md-3 pt-3 d-flex justify-content-center">
+                    <button class="btn btn-primary" >Search</button>
+                </div>
+            </div>
+              
+            <% end %>
+        </div>
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#Adddept"> Add Dept </button>
+            <%= link_to "Active Dept", department_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove Dept", department_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<button id="my-button">Click  jq</button>
+<button id="my-button1">Click js</button> 
+-->
+<div class="table-headtitle">
+<h4><div id="department_count">Total Department <%=  (@department.count) %></div> </h4>
+
+</div>
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Dept. No.</th>
+            <th scope="col">Department Name</th>
+            <th scope="col">Dept State</th>
+            <th scope="col">Dept City</th>
+            <th scope="col">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @department.each do |dept| %>
+                <tr >
+                <td ><%= ser_no %></td>
+                <th scope="row"><%= dept.dept_name%></th>
+                <td><%= dept.dept_state %></td>
+                <td><%= dept.city %></td>
+                <td> 
+                    <div class="actions-icons">
+                        
+                           <button class="deletebtn"  onclick="edit_dept('<%= dept.id %>','<%= dept.dept_name %>', '<%= dept.dept_state %>', '<%= dept.city %>', '<%= dept.description %>')">
+                                <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                            </button>
+
+                            <% if (dept.is_active == true  &&  dept.is_remove == false) %>
+                            <button class="deletebtn" onclick="delete_dept(<%= dept.id %>,'<%= dept.is_active %>','<%= dept.is_remove %>','deactivate')" >                    
+                            <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                            </button>
+                            <% end %>
+    
+    
+                             <% if (dept.is_active == false  &&  dept.is_remove == true) %>
+                            <button class="deletebtn" onclick="delete_dept(<%= dept.id %>,'<%= dept.is_active %>','<%= dept.is_remove %>','activate')" >     
+                                <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                                </button>
+                             <% end %>
+    
+                            
+                            <button class="deletebtn"  onclick="view_dept( '<%=dept.dept_name %>', '<%= dept.dept_state %>', '<%= dept.city %>', '<%= dept.description %>')" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                            
+                            </button>
+
+                        </div>
+                </td>
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @department ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+
+
+
+<!-- Model start delete items -->
+<div class="modal fade" id="delete_dept" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Remove department</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <%= form_with(url: remove_dept_path, method: 'get', id: "removedept_form") do |f| %>
+                    
+                <div class="modal-body">
+                    <p>Are you sure you want to <%= params[:action_name] %> the ..Department....</p>
+                </div>
+                <%= f.hidden_field :is_active, name:'is_active' %>
+                <%= f.hidden_field :is_remove,  name:'is_remove' %>
+                <%= f.hidden_field :dept_id, name: 'id' %>
+                <%= f.hidden_field :dept_action, name:'dept_action' %>
+                <div class="modal-footer">
+
+                <% if params[:action_name] == "active"    %>
+                <button type="submit" class="btn btn-primary">Activate</button> 
+                <% end %>
+                <% if params[:action_name] == "removed" || params[:action_name] == "nil" || params[:action_name].blank? %>
+                <button type="submit" class="btn btn-warning">Deactivate</button>
+                 <% end %>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- Modal Close delete items-->
+
+
+        
+ <!-- Model start delete items -->
+            <div class="modal fade" id="delete_dept" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Department</h5>
+                            <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove the ................</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning">Remove</button>
+                            <button type="button" class="btn btn-primary">Active</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Close delete items-->
+
+
+
+<!-- Modal Start add Department-->
+<div class="modal modalleng2 fade" id="Adddept" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Department</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <%= form_with url: "/add_department", method: :post do |form|    %>
+                    <div class: "class"form-group""> 
+                    <%= form.label :dept_name , " Department Name " %>
+                    <%= form.text_field :dept_name, class: 'form-control',  placeholder: "Enter Department name", required: true, name: "dept[dept_name]" %>
+                    </div>
+                    <br>
+                    <div class: "form-group">
+                    <%= form.label :state_name , "Department State" %>
+                    <%= form.select('dept[dept_state]', options_for_select(select_all_state), {include_blank: 'Select a State'},{ class:'form-control', required: true}) %>
+                    <%#= form.text_field :dept_state, class: 'form-control',  placeholder: "Enter City", required: true, name: "dept[dept_state]" %>
+                    </div>
+                    <br>
+                    <div class: "form-group">
+                    <%= form.label :dept_city , " Department City" %>
+                    <%= form.select('dept[city]', options_for_select(select_all_district), {include_blank: 'Select a City',},{ class:'form-control', required: true}) %>
+                    <%#= form.text_field :dept_city,class:'form-control',   placeholder: "Enter state name", required: true, name: "dept[city]" %>
+                    </div>
+                    <br>
+                    <div class: "form-group">
+                    <%= form.label :desc , "Description" %>
+                    <%= form.text_area :desc, row:4, class: 'form-control',  placeholder: " description", name: "dept[description]"%>
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                    <%= form.submit 'Add Department', class:'btn btn-primary' %>        
+                    </div>
+
+                  <% end %>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- Modal Close add dept-->
+
+
+
+
+<!-- Modal Start Edit Department-->
+<div class="modal modalleng2 fade" id="edit_dept" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Update Department</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            
+             <%= render 'department/update', form_method: 'post', form_action: 'update', form_url: update_department_path %>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- Modal Close add dept-->
+
+
+
+
+
+<!-- Modal Start view Department-->
+<div class="modal modalleng2 fade" id="view_dept" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Departmen Details t</h5>
+            <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+              <div class="modal-body">
+
+
+
+              <%= form_with(url:update_department_path , method: :post) do |form| %> 
+
+                  
+                <%= form.hidden_field :"dept_id", name: 'id' %>
+            
+                <div class: "class"form-group""> 
+                <%=form.hidden_field:update_dept_id, name:"id"%>
+                <%= form.label :name , " Department Name " %>
+                <%= form.text_field :view_dept_name, disabled:true, class: 'form-control',name: 'dept_name'%>
+                </div>
+                <br>
+                <div class: "form-group">
+                <%= form.label :state , "Department State" %>
+                <%= form.text_field :view_dept_state, disabled:true, class: 'form-control', name:'dept_state' %>
+                </div>
+                <br>
+                <div class: "form-group">
+                <%= form.label :dept_city , " Department City" %>
+                <%= form.text_field :view_city,disabled:true,class:'form-control',name:'city' %>
+                </div>
+                <br>
+                <div class: "form-group">
+                <%= form.label :desc , "Descriptionn" %>
+                <%= form.text_area :view_description,disabled:true, row:4, class: 'form-control',name:'description' %>
+                </div>
+                <br>
+                <div class="modal-footer">
+            <button type="button" class="btn btn-default"  onclick="closeModal()"  data-dismiss="modal">Close</button>
+
+                </div>
+                        
+                
+              <% end %>
+
+
+
+
+
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close view-->
+
+
+
+<script>
+
+
+function view_dept(dept_name, dept_state ,city, description){
+    $('#view_dept').modal('show')
+    $('#view_dept_name').val(dept_name);
+    $('#view_dept_state').val(dept_state);
+    $('#view_city').val(city);
+    $('#view_description').text(description);
+  }
+
+  function delete_dept(dept_id,active,remove,deptaction){
+    $('#is_active').val(active)
+    $('#is_remove').val(remove)
+    $('#dept_id').val(dept_id)
+    $('#dept_action').val(deptaction)
+    $('#delete_dept').modal('show')
+ }
+
+  
+  function closeModal() {
+  $('#view_dept').modal('hide');
+  $('#edit_dept').modal('hide') 
+  $('#delete_dept').modal('hide') 
+  }
+
+  
+  function edit_dept(id,name,state,city,desc){
+    var state_val = document.getElementById('update_dept_state');
+    var city_val = document.getElementById('city');
+    var selected_state =state
+    var city =city
+      $('#edit_dept').modal('show') 
+      $('#update_dept_id').val(id)
+      $('#update_dept_name').val(name)
+      $('#description').val(desc)
+
+      for (var i = 0; i < state_val.options.length; i++) {
+        if (state_val.options[i].value == selected_state) {
+            state_val.options[i].selected = true;
+          break;
+        }
+      }
+
+      for (var i = 0; i < city_val.options.length; i++) {
+        if (city_val.options[i].value == city) {
+            city_val.options[i].selected = true;
+          break;
+        }
+      }
+
+
+      
+     
+} 
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+     $('#my-button').on('click', function() {
+       alert('Your jQuery alert message goes here');
+     });
+   });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+     var myButton = document.getElementById('my-button1');
+   
+     
+     myButton.addEventListener('click', function() {
+       alert('js  js  js  jss  jjs    js   js   js   js   ');
+     });
+   });
+</script>

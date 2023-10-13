@@ -1,0 +1,41 @@
+
+<%= form_with(url: form_url, method: form_method) do |form| %>
+  <div class="form-group">
+  <%= form.label :media %>
+  <%= form.select :"#{form_action}_media", options_for_select(select_all_channel),  {prompt: "Select Media"} , {class: 'form-control' ,required: true } %>
+  </div>
+
+
+    <div class="form-group">
+       <%= form.label :sub_media_id %>
+       <%= form.select :"#{form_action}_sub_media_id", options_for_select([]), {prompt: "Select Sub Media"}, {class: 'form-control' ,required: true,name: 'set_price[sub_media_id]'} %>
+     </div>
+  
+
+
+     <div class="form-group">
+       <%= form.label :price_scheme %>
+       <%= form.select :"#{form_action}_price_scheme", Pricing.pricing_models.keys.to_a, {prompt: "Select Pricing Scheme"}, {class: 'form-control',required: true , name: 'set_price[price_scheme]' }  %>
+     </div>
+   
+     <div class="form-group">
+       <%= form.label :price %>
+       <%= form.text_field :"#{form_action}_price", type: "number", pattern: "[0-9,.]*", class: 'form-control', required: true, placeholder: 'Enter the Price', name: 'set_price[price]' %>
+       <small class="text-muted">Please enter a valid price</small>
+     </div>
+   
+     </div>
+     <div class="modal-footer">
+    
+     <button type="button" class=" btn btn-secondary"  onclick="closeModal()"  data-dismiss="modal">Close</button>            
+ 
+     <%= form.submit :'Clear Form', type:'reset', class:'btn btn-dark' %>
+
+     <%= form.submit form_action + ' Price', class:'btn btn-primary' %>
+
+     </div>
+
+
+
+   <% end %>
+

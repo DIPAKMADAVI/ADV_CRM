@@ -1,0 +1,113 @@
+   <%= form_tag("/customeradd_cust", method: "post", id: "") do %>
+     <div class="row mt-2">
+     <div class="container mt-1">
+       <div class="border p-3">
+         <h5>Select Scheme:</h5>
+         <%= select_tag "schemeSelect", options_for_select([["Days", "days"], ["Months", "months"], ["Years", "years"]]), class: "form-select mb-3" %>
+         
+         <div id="planList" style="display: none;">
+           <h5>Select Plans:</h5>
+           <!-- Replace this with actual plan data from your database -->
+           <% @plans =[["dip 1"],["dip 2"],["dip 3"],["dip 4"],["dip 5"],["dip 6"],] %>
+
+           <% @plans.each do |plan| %>
+             <div class="form-check">
+               <input class="form-check-input" type="checkbox" id="<%= plan %>" name="selected_plans[]" value="<%= plan%>">
+               <label class="form-check-label" for="<%= plan %>"><%= plan%></label>
+             </div>
+           <% end %>
+           <!-- Add more plan checkboxes as needed -->
+   
+           <button id="addPlansBtn" type="button" class="btn btn-primary mt-3">Add Plan</button>
+         </div>
+         
+         <div id="selectedPlansContainer" class="mt-3" style="display: none;">
+           <h5>Selected Plans:</h5>
+           <div class="border p-3">
+             <table class="table">
+               <thead>
+                 <tr>
+                   <th style="width: 10%">Sr. No.</th>
+                   <th style="width: 80%">Selected Plan</th>
+                   <th style="width: 10%">Actions</th>
+                 </tr>
+               </thead>
+               <tbody id="selectedPlansTableBody">
+                 <!-- Selected plans will be added here dynamically -->
+               </tbody>
+             </table>
+           </div>
+         </div>
+         
+      <!--   <button id="submitButton" type="submit" class="btn btn-success mt-3"  style="display: none;" >Submit Form</button> -->
+       </div>
+     </div>
+     </div >
+     <% end %>
+
+   <script>
+     $(document).ready(function() {
+       var selectedPlans = [];
+   
+       $('#schemeSelect').on('change', function() {
+         if ($(this).val() !== '') {
+           $('#planList').show();
+         } else {
+           $('#planList').hide();
+         }
+       });
+   
+       var selectedPlansCount = 0;
+   
+       $('#addPlansBtn').on('click', function() {
+         $('input[type=checkbox]:checked').each(function(index) {
+           var planName = $(this).val();
+
+           if (!selectedPlans.includes(planName)) {
+           selectedPlansCount++;
+           selectedPlans.push(planName);
+           var row = `
+             <tr>
+               <td>${selectedPlansCount}</td>
+               <td>${planName}</td>
+               <td>
+                 <button class="btn btn-danger btn-sm">Delete</button>
+               </td>
+             </tr>`;
+           $('#selectedPlansTableBody').append(row);
+           alert(selectedPlans)
+        }
+         });
+   
+         $('#selectedPlansContainer').show();
+         $('#submitButton').show(); 
+         })
+   
+       $('#mainForm').on('submit', function() {
+         $('<input>').attr({
+           type: 'hidden',
+           name: 'selected_plans_data',
+           value: JSON.stringify(selectedPlans)
+         }).appendTo('#mainForm');
+       });
+       $('#selectedPlansTableBody').on('click', '.btn-danger', function() {
+        var row = $(this).closest('tr');
+        var planName = row.find('td:eq(1)').text();
+    
+        var index = selectedPlans.indexOf(planName);
+        if (index !== -1) {
+          selectedPlans.splice(index, 1);
+        }
+        row.remove(); 
+        alert(selectedPlans)
+        });
+
+     });
+     
+
+  
+   </script>
+   
+
+
+   

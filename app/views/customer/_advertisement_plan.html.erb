@@ -1,0 +1,295 @@
+
+
+
+<%#= form_with(url:form_url , method:form_method ,  id:form_action  exclude:[:scheme_select,:type_of_adv,:sub_types])  do |form| %>
+  <%= form_with(url: form_url, method: form_method, id: form_action,remote:true , exclude: [:scheme_select, :type_of_adv, :sub_types]) do |form| %>
+
+
+
+          <div class="row p-1 m-0  border border-secondary border-2">
+            <div class="row">
+              <%= form.label :select_business, class: "col-sm-3 p-3 pt-2 col-form-label" %>
+              <div class="col-sm-9 pl-0">
+              <%= form.select :"#{form_action}_business_detail_id", [], { prompt: "Select" }, class: "custom-select", required: true%>
+              </div>
+            </div>
+     
+          <div class="row">
+            <%= form.label :Advertisement_title, class: "col-sm-3 p-3 pt-2 col-form-label" %>
+            <div class="col-sm-9 pl-0">
+            <%= form.text_field :title_of_adv, placeholder:"Title will autocreate ", class: "form-control",value: "customer + busines name + media + date " ,  readonly: true  %>
+            </div>
+          </div>
+        </div>
+
+  
+     <div class="bordercolor p-2 mt-3 border border-secondary border-2" >
+              <div class="row mt-2">
+                <div class="col">
+                  <div class="row">
+                      <%= form.label :plan_State , class: "col-sm-5 col-form-label pr-0" %>
+                      <div class="col-sm-7 pl-0">
+                          <%= form.select :plan_State, options_for_select(select_all_state), { prompt: "Select " }, class: "custom-select" %>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="row">
+                      <%= form.label :plan_district, class: "col-sm-4 col-form-label pr-0" %>
+                      <div class="col-sm-7 pl-0">
+                          <%= form.select :plan_district, options_for_select(select_all_district), { prompt: "Select" }, class: "custom-select" %>
+                      </div>
+                      </div>
+                    </div>
+              </div>
+
+            <div class="row mt-2">
+                <div class="col">
+                  <div class="row">
+                    <%= form.label :type_of_adv, class: "col-sm-5 col-form-label pr-0" %>
+                      <div class="col-sm-7 pl-0">
+                      <%= form.select :type_of_adv, options_for_select(select_all_channel), { prompt: "Select" }, class: "custom-select" %>
+                      </div>
+                    </div>
+                </div>
+                <div class="col">
+                  <div class="row">
+                      <%= form.label :sub_types , class: "col-sm-4 col-form-label pr-0" %>
+                    <div class="col-sm-7 pl-0">
+                      <%= form.select :sub_types, options_for_select(select_sub_channel), { prompt: "Select" }, class: "custom-select" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            <div class="row mt-2">
+            <div class="col">
+              <div class="row">
+                <%= form.label :estimated_start_date, class: "col-sm-5 col-form-label pr-0" %>
+                  <div class="col-sm-7 pl-0">
+                  <%= form.date_field :est_start_date,  class: "form-control" %>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="col">
+              <div class="row">
+                  <%= form.label :estimated_end_date , class: "col-sm-4 col-form-label pr-0" %>
+                <div class="col-sm-7 pl-0">
+                  <%= form.date_field :est_end_date, class: "form-control" %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="row mt-1">
+            <div class="col">
+              <div class="row">
+                <%= form.label :adv_plan_status , class: "col-sm-5 col-form-label pr-0" %>
+                  <div class="col-sm-7 pl-0">  
+                  <%= form.select :adv_plan_status, AdvertisementPlan.advertisement_statuses.keys.to_a,{prompt: "Select Status"}, {class: 'custom-select',required: true } %>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="col">
+              <div class="row">
+                  <%= form.label :Select_Scheme , class: "col-sm-4 col-form-label pr-0" %>
+                <div class="col-sm-7 pl-0">
+                <%= form.select :scheme_select, Pricing.pricing_models.keys.to_a, {prompt: "Select Pricing Scheme"}, {class: 'custom-select',required: true }  %>
+                </div>
+              </div>
+            </div>
+        </div>
+
+            <div class="row">
+            <div class="col-md-12 text-center">
+              <span class="text-danger" id="error_prompt"></span>
+            </div>
+        </div>
+
+      <div class="bordercolor p-2 mt-3 border border-secondary border-2" >
+            <div id="plansContainer" class="p-3 mb-1 border border-secondary border-2">
+            </div>
+            <button id="add_Plans" class="btn btn-primary mb-3 d-none">Add Selected Plans</button>
+            <!-- Selected Plans -->
+
+            <div id="selectedPlans" class="mb-3 border border-secondary border-2 ">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="width-1">Sr. No</th>
+                            <th scope="col" class="width-9">Plan Name</th>
+                            <th scope="col" class="width-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+            <!-- Submit Button -->
+      <%= form.hidden_field :selectedScheme, value: "", readonly: true %>
+      <button id="submitButton" class="btn btn-success d-none">Submit</button>
+      </div>   
+
+<% end %>
+
+
+
+
+
+<script>
+
+$(document).ready(function() {
+    const selectedPlanIds = [];
+    const selectedScheme = []
+    let planCounter = 1;
+
+    // var form = document.getElementById("Adver")
+    // var formAction = form.id;
+   // console.log( formAction )
+
+    $('#add_Plans').on('click', function(event) {
+        event.preventDefault();
+        $('#submitButton').removeClass('d-none');
+        $('.planCheckbox:checked').each(function() {
+            const planId = $(this).data('id');
+            const planName = $(this).next().text();
+            const count_per_sheme = $(this).parent().find('input[type="number"]').val(); 
+
+
+            if ((!selectedPlanIds.includes(planId)) && (!count_per_sheme== "")) {
+                selectedPlanIds.push(planId);
+                $('#selectedPlans tbody').append(`
+                    <tr data-id="${planId}">
+                        <td>${planCounter}</td>
+                        <td>${planName}</td>
+                        <td><button class="btn btn-danger deletePlan">Delete</button></td>
+                    </tr>`
+                    
+                ); 
+                planCounter++;
+
+                  
+                var changeplanName = planName
+                var schemse = changeplanName.split(" ").pop()
+                if (!selectedScheme.includes(schemse)){
+                  selectedScheme.push(schemse)
+                  var existingValue = $('#selectedScheme').val();
+                  $('#selectedScheme').val(existingValue + ',' + '"' + schemse + '"'); 
+                }
+
+                $('<input>').attr({
+                  type: 'hidden',
+                  name: 'selectedPlans[]',
+                  value: planId + ',' + count_per_sheme
+              }).appendTo('#Adver');  
+
+            } else {
+              if (selectedPlanIds.includes(planId) ){
+                $('#error_prompt').text(`Plan ${planName} already exists.`);
+                timeout_and_clear()
+                }
+              if(count_per_sheme == ""){
+                $('#error_prompt').text(`select How many time you wanna repeat same scheme `);
+                timeout_and_clear()
+              }
+
+            }
+          
+
+   
+
+
+        });
+    });
+
+    $('#selectedPlans').on('click', '.deletePlan', function() {
+        const planId = $(this).closest('tr').data('id');
+        const index = selectedPlanIds.indexOf(planId);
+        if (index > -1) {
+            selectedPlanIds.splice(index, 1);
+        }
+        $(this).closest('tr').remove();
+        $('input[name="selectedPlans[]"][value="' + planId + '"]').remove();
+        //$(`.hiddenPlanInput.${planId}`).remove();
+
+    });
+
+
+
+ 
+
+
+
+
+
+
+    $('#scheme_select').on('change', function() {
+        var selectedScheme = $(this).val();    
+        var selectedState = $('#plan_State').val();
+        var selectedDistrict = $('#plan_district').val();
+        var selectedTypeOfAdv = $('#type_of_adv').val();
+        var selectedSubTypes = $('#sub_types').val();
+
+        if (selectedState && selectedDistrict && selectedTypeOfAdv) {
+            $('#plansContainer').empty();
+            $.ajax({
+                type: 'get',
+                url: '/get_scheme_data_plan',
+                data: {
+                    selected_scheme: selectedScheme,
+                    plan_state: selectedState,
+                    plan_district: selectedDistrict,
+                    type_of_adv: selectedTypeOfAdv,
+                    sub_types: selectedSubTypes
+                },
+                dataType: 'json',
+                success: function(response) {
+                    $('#plansContainer').empty(); // Clear existing content
+                    $('#add_Plans').removeClass('d-none');
+
+                  $('#plansContainer').append(
+                    `<div class="form-check m-1 row-12 d-flex align-items-center">
+                    <span class=" col-7" ><b> Available Plan List </b></span>
+                    <span class=" col-5" > <b> scheme Repeatation </b> </span>
+                    </div>`)
+
+                    response.forEach(function(plan) {
+                        $('#plansContainer').append(
+                            `<div class="form-check m-1 row-12 d-flex align-items-center">
+                                <input type="checkbox" class="form-check-input planCheckbox m-2" data-id="${plan[1]}">
+                                <label class="form-check-label col-7">${plan[0]}</label>                             
+                                <input type="number" class="col-2" id="${plan[1]}" value="" >
+                         </div>`
+                        );
+                    });
+                }
+
+            });
+        }
+      else {
+        $('#error_prompt').text('Please fill in all fields before proceeding').addClass('text-danger').show();
+      var selectElement = $('.form-control[name="set_price[price_scheme]"]');
+      selectElement.prop('selectedIndex', 0);
+      timeout_and_clear()
+   } 
+
+
+    });
+});
+
+function timeout_and_clear() {
+  setTimeout(() => {
+    $('#search_cust_error').text('')
+    $('#error_prompt').text('')
+  }, 3000);
+}
+
+
+
+
+
+    
+</script>

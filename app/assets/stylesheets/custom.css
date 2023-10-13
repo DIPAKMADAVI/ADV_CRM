@@ -1,0 +1,27 @@
+.button {
+     background-color: #ca96b4;
+     border: 2px solid #24242c;
+     color: white;
+     padding: 12px 35px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     margin: 3px 2px;
+     border-radius: 6px;
+     cursor: pointer;
+   }
+   
+   .scrollable-content {
+    max-height: 300px; /* Set a maximum height for the scrollable content */
+    overflow-y: auto; /* Add a vertical scrollbar if content overflows */
+  }
+   
+   
+   
+   .log-in {
+     background-color: #471b34;
+     /* background-color: #b1829d; */
+
+   }
+   

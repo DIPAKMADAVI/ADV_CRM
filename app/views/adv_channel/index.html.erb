@@ -1,0 +1,346 @@
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+  <div class="table-headtitle1">
+    <div class="col-sm-8">
+      
+      <%= search_form_for @q, url: channel_index_path do |f| %>
+        <%#= form_with(model: @q, url: 'department', method: :get) do |f|   %>
+            <div class="row d-flex align-items-center justify-content-around firstbar">
+                <div class="col-12 col-lg-3 col-xl-3 col-md-3 p-1 d-flex justify-content-center">
+                <%#= label_tag :department, " Select department" %>
+                <%=f.select :channel_name_cont, AdvChannel.media_channel_names.keys.to_a, {prompt: "Select  Media Channel"}, { class: 'form-control'} %> 
+                </div>
+
+
+                <div class="col-12 col-lg-3 col-xl-3 col-md-3 p-1 d-flex justify-content-center">
+                <%#= label_tag :state, " Select State" %>
+                <%=f.select :sub_channal_name_eq, options_for_select(select_sub_channel), {prompt: "Select Sub Channel"}, { class: 'form-control'} %>              
+                </div>
+
+
+                <div class="col-12 col-lg-3 col-xl-3 col-md-3 p-1 d-flex justify-content-center">
+                <%#= label_tag :city, "Select City" %>
+                </div>
+                
+                <div class="col-12 col-lg-2 col-xl-2 col-md-2 p-1 d-flex justify-content-center">
+                    <button class="btn btn-primary" >Search</button>
+                </div>
+            </div>
+        <% end %>
+      </div>
+
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#add_channel"> Add Channel </button>
+            <%= link_to "Active Channel", channel_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove Channel", channel_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+            
+        </div>
+    </div>
+</div> 
+
+<!--
+<button id="my-button">Click  jq</button>
+<button id="my-button1">Click js</button>  -->
+<div class="table-headtitle">
+<h4><div id="department_count">Total channels - (<%= @adv_channel.count %>) </div> </h4>
+
+</div>
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead >
+            <tr class="bg-secondary bg-gradient">
+            <th scope="col">channel. No.</th>
+            <th scope="col">Channel Name</th>
+            <th scope="col">Sub Channe State</th>
+            <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% ser_no = 1 %>
+            <% @adv_channel.each do |channel| %>
+                <tr >
+                <td ><%= ser_no %></td>
+                <th scope="row"><%= channel.channel_name%></th>
+                <td><%= channel.sub_channal_name %></td>
+                <td> 
+                    <div class="actions-icons">  
+                        <button class="deletebtn"  onclick="edit_channel('<%= channel.id %>','<%= channel.channel_name %>', '<%= channel.sub_channal_name %>','<%= channel.description %>')">
+                            <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                        </button>
+
+                        <% if (channel.is_active == true  &&  channel.is_remove == false) %>
+                        <button class="deletebtn" onclick="delete_cahnnel(<%= channel.id %>,'<%= channel.is_active %>','<%= channel.is_remove %>','deactivate')" >                    
+                        <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                        </button>
+                        <% end %>
+
+
+                         <% if (channel.is_active == false  &&  channel.is_remove == true) %>
+                        <button class="deletebtn" onclick="delete_cahnnel(<%= channel.id %>,'<%= channel.is_active %>','<%= channel.is_remove %>','activate')" >     
+                            <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                            </button>
+                         <% end %>
+
+
+                        <button class="deletebtn"  onclick="view_channel('<%= channel.channel_name %>', '<%= channel.sub_channal_name %>','<%= channel.description %>')" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                        </button>
+
+                    </div>
+                </td>
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @adv_channel, class: 'custom-pagination' %>
+    <%#= will_paginate @adv_channel ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+<div class="modal modalleng fade"  id="add_channel" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Avertisement channeel</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <div class="modal-body">
+        <%= form_with url: "/adv_channel", method: :post do |form| %>
+
+        <div class="form-group">
+        <%= form.label :channel_name %> 
+        <%= form.select :channel_name, AdvChannel.media_channel_names.keys.to_a, { prompt: "Select Media Channel" }, { class: 'form-control', name: 'channel[channel_name]' } %>
+       </div>
+        <br>
+
+        <div class: "form-group">
+        <%= form.label :sub_channel_name , "Sub Channel Name" %>
+        <%= form.text_field :sub_channel, class:"form-control" ,  placeholder: "Enter channel name", required: true, name: "channel[sub_channal_name]" %>
+        </div>
+        <br>
+
+        <div class: "form-group">
+        <%= form.label :desc , "Description" %>
+        <%= form.text_field :desc, class:"form-control" , placeholder: " description", name: "channel[description]"%>
+        </div>
+        <br>
+
+        <div class="modal-footer">
+        <%= form.submit 'Add Channel', class:'btn btn-secondary' %>
+        </div>
+    <% end %> 
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<!-- Modal Start Edit -->
+<div class="modal modalleng2 fade" id="edit_channel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Update Channel</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            
+             <%= render 'adv_channel/update', form_method: 'post', form_action: 'update', form_url: update_channel_path %>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- Modal Close add -->form_url
+
+
+
+
+
+<!-- Modal Start view -->
+<div class="modal modalleng2 fade" id="view_channel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">  Channel View </h5>
+            <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+              <div class="modal-body">
+        
+              <%= form_with(url:update_channel_path , method: :post) do |form| %>            
+                <div class: "class"form-group""> 
+                <%= form.label :name , " Channel Name " %>
+                <%= form.text_field :v_dept_name, disabled: true , class: 'form-control'%>
+                </div>
+                <br>
+       
+                <div class: "form-group">
+                <%= form.label :state , " Sub Channel Name " %>
+                <%= form.text_field :v_dept_state,disabled: true, class: 'form-control' %>
+                </div>
+                <br>
+       
+                <div class: "form-group">
+                <%= form.label :desct , "Descriptionn" %>
+                <%= form.text_area :v_description , disabled: true, row:4, class: 'form-control' %>
+                </div>              
+                <br>
+       
+              <% end %>
+
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default"  onclick="closeModal()"  data-dismiss="modal">Close</button>
+                </div>
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close view-->
+
+        
+<!-- Model start delete items -->
+<div class="modal fade" id="delete_channel" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Remove Channel</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <%= form_with(url: remove_channel_path, method: 'get', id: "removechannel_form") do |f| %>
+                    
+                <div class="modal-body">
+                    <p>Are you sure you want to <%= params[:action_name] %> the ................</p>
+                </div>
+                <%= f.hidden_field :is_active, name:'is_active' %>
+                <%= f.hidden_field :is_remove,  name:'is_remov' %>
+                <%= f.hidden_field :channel_id, name: 'id' %>
+                <%= f.hidden_field :channel_action, name:'channel_action' %>
+                <div class="modal-footer">
+               
+                <% if params[:action_name] == "active" %>
+                <button type="submit" class="btn btn-primary">Activate</button> 
+                <% end %>
+                <% if params[:action_name] == "removed"   || params[:action_name] == "nil" || params[:action_name].blank? %>
+                <button type="submit" class="btn btn-warning">Deactivate</button>
+                 <% end %>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- Modal Close delete items-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+function view_channel(dept_name, dept_state,description){
+    $('#view_channel').modal('show')
+    $('#v_dept_name').val(dept_name);
+    $('#v_dept_state').val(dept_state);
+    $('#v_description').text(description);
+  }
+
+
+  
+  function delete_cahnnel(chnl_id,active,remove,cahnnelaction){
+    $('#is_active').val(active)
+    $('#is_remove').val(remove)
+    $('#channel_id').val(chnl_id)
+    $('#channel_action').val(cahnnelaction)
+    $('#delete_channel').modal('show')
+ }
+
+  function closeModal() {
+    $('#view_channel').modal('hide');
+    $('#edit_channel').modal('hide') 
+    $('#delete_channel').modal('hide') 
+    }
+
+
+  function edit_channel(id,name,state,desc){
+    console.log(id,name,state,desc)
+
+      $('#edit_channel').modal('show') 
+      $('#update_channel_id').val(id)
+      $('#update_channel_name').val(name)
+      $('#update_channel_state').val(state)
+      $('#update_channel_description').val(desc) 
+      
+    var yourAttributeSelect = document.getElementById('update_channel_name');
+    var yourValueToSet = name
+    
+    for (var i = 0; i < yourAttributeSelect.options.length; i++) {
+      if (yourAttributeSelect.options[i].value === yourValueToSet) {
+        yourAttributeSelect.options[i].selected = true;
+        break;
+      }
+    }
+
+    }
+
+    
+    
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+     $('#my-button').on('click', function() {
+       alert('Your jQuery alert message goes here');
+     });
+   });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+     var myButton = document.getElementById('my-button1');
+   
+     
+     myButton.addEventListener('click', function() {
+       alert('js  js  js  jss  jjs    js   js   js   js   ');
+     });
+   });
+</script>

@@ -1,0 +1,15 @@
+
+
+
+<% if session[:user_id].present?%>
+<%= link_to 'Sign Out', onclick:'open_logout_dialog()' %>
+<% end %>
+<% debugger %>
+                  <% if flash[:notice].present? %>
+                    <div class="alert alert-danger">
+                    <span  id="error_text" style="color: red;"><%= flash[:notice] %></span>
+                    </div>
+                  <% end %>
+
+
+

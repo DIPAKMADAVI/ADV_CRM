@@ -1,0 +1,287 @@
+
+                 <div id="" >
+                  <div class="bordercolor p-2 mt-3 border border-secondary border-2" id:>
+                    <h5 class="text-primary"><u>Advertisement Details</u></h5>  
+  
+                                  <div class="row mt-2">
+                                  <div class="col">
+                                    <div class="row">
+                                        <%= form.label :plan_State , class: "col-sm-5 col-form-label pr-0" %>
+                                        <div class="col-sm-7 pl-0">
+                                            <%= form.select :plan_State, options_for_select(select_all_state), { prompt: "Select " }, class: "form-control" %>
+                                        </div>
+                                        </div>
+                                      </div>
+                                      <div class="col">
+                                        <div class="row">
+                                        <%= form.label :plan_district, class: "col-sm-4 col-form-label pr-0" %>
+                                        <div class="col-sm-7 pl-0">
+                                            <%= form.select :plan_district, options_for_select(select_all_district), { prompt: "Select" }, class: "form-control" %>
+                                        </div>
+                                        </div>
+                                      </div>
+                                </div>
+
+                              <div class="row mt-2">
+                                  <div class="col">
+                                    <div class="row">
+                                      <%= form.label :type_of_adv, class: "col-sm-5 col-form-label pr-0" %>
+                                        <div class="col-sm-7 pl-0">
+                                        <%= form.select :type_of_adv, options_for_select(select_all_channel), { prompt: "Select" }, class: "form-control" %>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div class="col">
+                                    <div class="row">
+                                        <%= form.label :sub_types , class: "col-sm-4 col-form-label pr-0" %>
+                                      <div class="col-sm-7 pl-0">
+                                        <%= form.select :sub_types, options_for_select(select_sub_channel), { prompt: "Select" }, class: "form-control" %>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+                              
+                                    
+                                <div class="row mt-2">
+                            
+                                      <div class="col">
+                                        <div class="row">
+                                          <%= form.label :schema, class: "col-sm-3 col-form-label pr-0" %>
+                                          <div class="col-sm-8 pl-0">
+                                            <%= form.select :schema, options_for_select(["Random Name1", "Random Name2"]), { prompt: "Select" }, class: "form-control" %>
+                                          </div>
+                                       </div>
+                                      </div>
+                                </div>
+
+
+                            <div id="" class="p-2 mt-3">
+                                <h5 class="text-primary"><u> Selected plans for Addvertisement </u></h5>
+                                
+                                <%= render 'customer/update_cust', form_method: 'post', form_action: 'Add_advertise_plan', form_url: 'customeradd_cust_path' %>
+                            </div >
+              </div>
+
+
+
+
+
+
+
+
+
+
+              <div class="row mt-2 p-3" >
+                <div class="row pr-3 ">
+                  <%= form.label :customer_type, "Type Of Customer", class: "col-sm-4 col-form-label pr-0" %>
+                  <%= form.select :"#{}_customer_type_details", options_for_select([["New"], ["Existing"]]), { prompt: "Select Customer Type" }, { class: 'form-control', onchange: "showContent(this.value);" } %>
+                </div>
+              </div>
+
+
+
+
+<div class="modal-body ">
+
+<%= form_with(url:form_url , method:form_method ,  id:form_action )  do |form| %>
+            <div class= " p-2 border border-primary" >        
+            <div id="NewDiv"   >
+              <div class="bordercolor p-2 mt-2 border border-secondary border-2">
+                <h5 class="text-primary" id="-heading"  ><u>Customer Detail</u></h5> 
+
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :first_name, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_first_name", class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :last_name, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_last_name", class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :email, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.email_field :"#{form_action}_cust_email", class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :contact, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_phone_number", class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class= "col">
+                            <div class="row">
+                              <%= form.label :customer_state, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                              <%= form.select :"#{form_action}_customer_state", options_for_select(select_all_state), { prompt: "Select State " }, class: "form-control" %>
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :customer_district, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                              <%= form.select :"#{form_action}_customer_district", options_for_select(select_all_district), { prompt: "Select District " }, class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :client_address, class: "col-sm-2 col-form-label pr-0" %>
+                              <div class="col-sm-10 pl-0">
+                                <%= form.text_area :"#{form_action}_cust_address", class: "form-control", rows: 2 %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+  
+              
+
+                <div id="bhv" >
+                  <div class="bordercolor p-2 mt-3 border border-secondary border-2" id="new">
+                    <h5 class="text-primary"><u>Business Detail</u></h5>
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_name, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_name", class: "form-control" %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_type, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_sector", class: "form-control" %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_mail, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.email_field :"#{form_action}_business_mail", class: "form-control" %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_contact, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_mobile_number", class: "form-control" %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                      <div class= "col">
+                        <div class="row">
+                          <%= form.label :company_state, class: "col-sm-3 col-form-label pr-0" %>
+                          <div class="col-sm-9 pl-0">
+                          <%= form.select :"#{form_action}_business_state", options_for_select(select_all_state), { prompt: "Select State " }, class: "form-control" %>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="row">
+                          <%= form.label :company_district, class: "col-sm-3 col-form-label pr-0" %>
+                          <div class="col-sm-9 pl-0">
+                          <%= form.select :"#{form_action}_business_district", options_for_select(select_all_district), { prompt: "Select District " }, class: "form-control" %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_address, class: "col-sm-3 col-form-label pr-0" %>
+                            <div class="col-sm-9 pl-0">
+                              <%= form.text_area :"#{form_action}_business_address", class: "form-control", rows: 2 %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div >            
+                  <div id="customer_forms_button" style="display" > 
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal" id="<%= form_action %>_closeButton">Close</button>
+                  <%= form.submit 'Clear Form', type: 'reset', class: 'btn btn-dark', id: "#{form_action}_clearButton" %>
+                  <%= form.submit "#{form_action}_Detail", class: "btn btn-primary" %>
+                  </div>
+                  </div>
+                  
+                  <% end %>
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <div class="p-4  m-2 border bg-light" id="hbn"  >
+                  <%#= search_form_for @q, url: your_models_path, method: :get, html: { class: 'search-form' } do |form| %>
+                  <div class="row ">
+                    <div class="col-md-6">
+                        <%= form.label :state_eq, "State" %>
+                        <%= form.select :search_cust_State, options_for_select(select_all_state), { prompt: "Select " }, class: "form-control" %>
+                      </div>
+                      <div class="col-md-6">
+                        <%= form.label :district_eq, "District" %>
+                          <%= form.select :search_cust_district, options_for_select(select_all_district), { prompt: "Select" }, class: "form-control" %>
+                      </div>
+                    </div>
+                  <div class="row">
+                    <div class="col-md-8 pl-3">
+                      <%= form.label :customer_eq, "Customer Name" %>
+                      <%= form.select :existing_customer, options_for_select([[],[],[],[]]), { prompt: "Select a Customer" }, { class: 'form-control' } %>
+                    </div>
+                    <div class="col-md-4  pt-4">
+                    <%= form.submit "Search", class: 'btn btn-primary', id:'search_existing_cust' %>
+                    </div>
+                  </div>
+                  <%#= end %>
+                </div>

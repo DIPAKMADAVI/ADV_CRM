@@ -1,0 +1,19 @@
+<div class="nav-header">
+    
+
+        <%if ["/groups","/product_owner","/sla_list","/probing_questions","/categories","/sub_categories","/sub_sub_categories"].include? request.path%>
+          
+        <%= render 'layouts/master_header' %>
+        <%elsif ["/sla_notification_settings","/passive_channel_setting","/spam_email_settings","/archive","/genesys_agents","/holidays","/workgroups","/atm_ticket_notifications","/job_hour_setting","/severity_settings"].include? request.path%>
+            <%=render 'layouts/settings_menu' %>
+        <%elsif ["/kms_categories","/kms_contents","/kms_questions","/job_assessment_tests"].include? request.path%>
+            <%=render 'layouts/kms_menu' %>
+        <%elsif ["/ticket_report/consolidated_report","/ticket_report/ticket_department_report","/ticket_report/workgroup_report","/ticket_report/breached_ticket_report","/sms_report"].include? request.path%>
+            <%=render 'layouts/report_menu' %>
+        <%elsif ["/user_list","/teams"].include? request.path%>
+            <%=render 'layouts/user_menu' %>
+        <%elsif ["/archive_ticket_list","/archive_report_index"].include? request.path%>
+            <%=render 'layouts/archival_header' %>
+        <%end%>
+    
+</div>

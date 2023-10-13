@@ -1,0 +1,50 @@
+
+    
+ 
+    <div class="page-header-content-left sub-menu">
+    <section id="mainsection">
+
+        <%if ["/index"].include? request.path%>
+        <%= render 'layouts/dashboard_header' %>
+        <%end%>
+
+        
+        <%if ["/contacts_user","/customer_index","/user_index","/adver_action_index"].include? request.path %>
+        <%= render 'layouts/contact_user_header'%>
+        <%end%>
+        
+        <%if ["/campaign_index","/campaign_Progress","/capmaign_analytics","/create_campaigin"].include? request.path %>
+        <%= render 'layouts/adv_campaign_header'%>
+        <%end%>
+        
+        
+        <%if ["/contact_lead_index", "/potential_clients", "/follow_up_activities", "/convert_contact", "/activity_cracking", "/contact_analytics", "/potential_clients"].include? request.path%>
+        <%= render 'layouts/contact_lead_header'%>  
+        <%end%>
+        
+        <%if ["/creativity_index","/creativity_progress","/export_publishing","/design_graphics","/dept_Collaboration"].include? request.path%>
+        <%= render 'layouts/adv_creativity_header' %>
+        <%end%>
+
+
+        <%if ["/master_config","/media_asset","/pricing_index", "/department","/add_channel","/channel_index",].include? request.path%>
+        <%= render 'layouts/master_confi_header'%>
+        <%end%>
+        
+        <%if ["/accounts_payments"].include? request.path%>
+        <%= render 'layouts/accounts_payments_header' %>
+        <%end%>
+
+        <%if ["/report_analytics"].include? request.path%>
+        <%= render 'layouts/report_analytics_header' %>
+        <%end%>
+
+        <%if ["/help_support"].include? request.path%>
+        <%= render 'layouts/help_support_header' %>
+        <%end%>
+
+        </section>
+    </div>
+
+
+

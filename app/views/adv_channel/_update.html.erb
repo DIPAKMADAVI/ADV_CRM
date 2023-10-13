@@ -1,0 +1,30 @@
+
+<%= form_with(url: form_url, method: form_method) do |form| %>
+         <%= form.hidden_field :"update_dept_id", name: 'id' %>
+     
+         <div class: "class"form-group""> 
+         <%= form.hidden_field :update_channel_id, name:'id' %>
+         <%= form.label :name , " Channel Name " %>
+         <%= form.select :update_channel_name, AdvChannel.media_channel_names.keys.to_a, {prompt: "Select  Media Channel",name:"channel_name"}, { class: 'form-control'} %> 
+         <%#= form.text_field :update_channel_name, class: 'form-control',name:'channel_name' %>
+         </div>
+         
+    
+        <br>
+         <div class: "form-group">
+         <%= form.label :state , " Sub Channel Name " %>
+         <%= form.text_field :update_channel_state, class: 'form-control', name:'sub_channal_name' %>
+         </div>
+         <br>
+
+         <div class: "form-group">
+         <%= form.label :desct , "Descriptionn" %>
+         <%= form.text_area :update_channel_description , row:4, class: 'form-control', name:'description' %>
+         </div>              
+         <br>
+
+         <div class="modal-footer">
+         <%= form.submit 'Update Channel', class:'btn btn-primary' %>        
+         </div>
+       <% end %>
+

@@ -1,0 +1,106 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+
+    <div class="col-sm-8 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+    <%= search_form_for @q, url: media_asset_path, method: :get do |f| %>
+        
+            
+            <%= f.label :title_cont, "Media Asset" , class:"control-label" %>
+            <%= f.select :media_type_cont, options_for_select(select_media_asset), include_blank: 'Select media ' %>
+            
+
+            
+            <%= f.label :content_cont, " Sub Media Type",class:"control-label" %>
+            <%= f.select :sub_media_type_eq, options_for_select(select_sub_media_asset), include_blank: 'Select sub media' %>
+            
+
+            
+            <%= f.label :content_cont, " District ",class:"control-label" %>
+            <%= f.select :district_eq, options_for_select(select_district), include_blank: 'Select sub media' %>
+            
+
+            
+            <button class="btn btn-primary" >Search</button>
+            <% end %>
+            </div>
+       
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#AddAsset"> Add asset </button>
+            <%= link_to "Active Asset", department_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove Asset", department_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<button id="my-button">Click  jq</button>
+<button id="my-button1">Click js</button> 
+-->
+<div class="table-headtitle">
+<h4><div id="Media_Asset_Count">Total Media Asset -( <%= @media_asset.count %> ) </div> </h4>
+</div>
+
+
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Sr.No</th>
+            <th scope="col">Media Aseet</th>
+            <th scope="col">Sub Media Asset</th>
+            <th scope="col">State</th>
+            <th scope="col">District</th>
+            <th scope="col">Action </th>
+            </tr>
+        </thead>
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @media_asset.each do |media| %>
+                <tr >
+                <td ><%= ser_no %></td>
+                <th scope="row"><%= media.media_type%></th>
+                <td><%= media.sub_media_id %></td>
+                <td><%= media.state %></td>
+                <td> <%= media.district %></td>
+                <td>
+                       <div class="actions-icons">
+                           <button class="deletebtn"  onclick="edit_media('<%= media.media_type %>', '<%= media.sub_media_id %>', '<%= media.state %>', '<%= media.district %>')">
+                                <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                            </button>
+
+                            <% if (media.is_active == true  &&  media.is_remove == false) %>
+                            <button class="deletebtn" onclick="delete_media(<%= media.id %>,'<%= media.is_active %>','<%= media.is_remove %>','deactivate')" >                    
+                            <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                            </button>
+                            <% end %>
+    
+    
+                             <% if (media.is_active == false  &&  media.is_remove == true) %>
+                            <button class="deletebtn" onclick="delete_media(<%= media.id %>,'<%= media.is_active %>','<%= media.is_remove %>','activate')" >     
+                                <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                                </button>
+                             <% end %>
+    
+                            
+                            <button class="deletebtn"  onclick="view_media('<%= media.media_type %>', '<%= media.sub_media_id %>', '<%= media.state %>', '<%= media.district %>')" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                            </button>
+                        </div>
+                </td>
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @media_asset ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+
+
+
+ 

@@ -1,0 +1,423 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+
+    <div class="col-sm-8 m-2">
+    <%= search_form_for @q, url: customer_index_path, method: :get do |f| %>
+        <div class="row align-items-center m-1">
+
+            <div class="form-group col-md-3 pb-4">
+                <label class="text-secondary text-xs">Customer Name</label>
+                <%= f.text_field :first_name_cont, placeholder: 'Enter Customer Name', class: 'form-control' %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Customer State</label>
+                <%= f.select :customer_state_eq, options_for_select(select_all_state),  { prompt: "Select any State " }, class: "custom-select"   %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Customer District</label>
+                <%= f.select :customer_district_eq, options_for_select(select_all_district),  { prompt: "Select any District " }, class: "custom-select"   %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Mobile Number</label>
+                <%= f.text_field :phone_number_eq, placeholder: 'Enter Mobile Number', class: 'form-control' %>
+            </div>
+
+            <div class="form-group col-md-2 d-flex align-items-end">
+                <%= f.submit 'Clear Form', type: 'reset', class: 'btn btn-dark m-1' %>
+                <button type="submit" class="btn btn-primary m-1">Search</button>
+            </div>
+
+        </div>
+    <% end %>
+</div>
+
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+        <button class="btn btn-primary m-2" onclick="add_customer()" > Add Customer </button>           
+            <%= link_to "Active Customer", customer_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Removed Customer", customer_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+<div class=" table-headtitle">
+<h4><div id="Media_Asset_Count">Total Customer & Addvertisement - (<%=@customer_info.count %> ) </div> </h4>
+</div>
+
+
+<div class="pb-2 table-responsive tbl2 ">
+    <table class="table table-striped " >
+        <thead>
+            <tr>
+            <th scope="col">Sr_No</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Cust State&Dist </th>
+            <th scope="col">Business Name</th>
+            <th scope="col">Buss State&Distt</th>
+            <th scope="col">Start Date </th>
+            <th scope="col">End Date </th>
+            <th scope="col"> Action </th>
+            </tr>
+        </thead>  
+            
+        <tbody >
+        <% ser_no = 1 %>
+            <% @customer_info.each do |cust| %>
+              
+             <% business_name = (BusinessDetail.joins(:customer_info).where(customer_id:cust.id).pluck(:business_name)).join(', ') %>
+             <% business_loc = BusinessDetail.joins(:customer_info).where(customer_id:9).pluck(:business_district).join(', ') %>
+              <% cuto_name = "#{cust.first_name} #{cust.last_name}" %>
+              <% cust_state_distict = "#{cust.customer_state } #{cust.customer_district }" %>
+                <tr >
+                <td> <%= ser_no %> </td>
+                <td > <%= cuto_name %> </td>
+                <td > <%= cust_state_distict  %> </td>
+                <td > <%= business_name.present? ? business_name :"---" %> </td>
+                <td > <%= business_loc.present? ? business_loc :"---" %> </td>
+                <td > <%= cuto_name %> </td>
+                <td > <%= cuto_name %> </td>
+                <td> 
+                
+                <div class="actions-icons col-5"> 
+                     <button class="deletebtn"  onclick="edit_cust_details('<%= cust.id %>','Update')">
+                          <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                      </button>
+ 
+                      <% if cust.is_active == true && cust.is_remove == false %>
+                      <button class="deletebtn" onclick="delete_cust('<%= cust.is_active %>','<%= cust.is_remove %>','<%= cust.id %>','deactivate')">
+                        <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                      </button>
+
+                    <% elsif cust.is_active == false && cust.is_remove == true %>
+                      <button class="deletebtn" onclick="delete_cust('<%= cust.is_active %>','<%= cust.is_remove %>','<%= cust.id %>','activate')">
+                        <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                      </button>
+                    <% end %>
+                    
+ 
+                      <button class="deletebtn"   onclick="edit_cust_details('<%= cust.id %>','View')">
+                      <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                      </button>
+
+                      <%#= business_id = cust %>
+                      <button class="deletebtn"  onclick="edit_cust_details('<%=cust.id%>','Adver')">
+                      <img src="../../assets/adver.svg" class="action-icons-svg " alt="">
+                      </button>
+                  </div>
+                </td>
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @customer_info , class: 'custom-pagination' %>
+</div>
+</div>
+
+
+
+
+<!-- Update_Customer and Company  -->
+
+    <div class="modal fade bd-example-modal-lg" id="Update_customer_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Update Customer and Advertisement </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+             
+              <div class="modal-body">
+                <%= render 'customer/form', form_method: 'post', form_action: 'Update', form_url: customer_update_path %>
+              </div>
+    </div>
+    </div>
+    </div>
+
+<!-- Modal Close User-->
+
+
+
+<!-- Model start delete items -->
+<div class="modal fade" id="delete_cust_model" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"> <%= params[:action_name] %> Customer</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <%= form_with(url: customer_remove_path, method: 'get', id: "removecust_form") do |f| %>
+                    
+                <div class="modal-body">
+                    <p>Are you sure you want to <%= params[:action_name] %> the ................</p>
+                </div>
+                <%= f.hidden_field :is_active, name:'is_active' %>
+                <%= f.hidden_field :is_remove,  name:'is_remov' %>
+                <%= f.hidden_field :cust_delete_id, name: 'id' %>
+                <%= f.hidden_field :cust_action, name:'cust_action' %>
+                <div class="modal-footer">
+               
+                <% if params[:action_name] == "active" %>
+                <button type="submit" class="btn btn-primary">Activate</button> 
+                <% end %>
+                <% if params[:action_name] == "removed"   || params[:action_name] == "nil" || params[:action_name].blank? %>
+                <button type="submit" class="btn btn-warning">Deactivate</button>
+             <% end %>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- Modal Close delete items-->
+
+
+
+<!-- View Customer and Conmpany Model -->
+    <div class="modal fade bd-example-modal-lg" id="View_customer_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> View Customer and Advertisement </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+             
+              <div class="modal-body">
+                <%= render 'customer/form', form_method: 'post', form_action: 'View', form_url: customeradd_cust_path %>
+              </div>
+    </div>
+    </div>
+    </div>
+
+<!-- Modal Close User-->
+
+<!-- Add Customer and Conmpany Model -->
+<div class="modal fade bd-example-modal-lg" id="add_new_customer" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">  Add Customer and Advertisement </h5>
+            <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>   
+
+          <div class="modal-body">
+            <%= render 'customer/form', form_method: 'post', form_action: 'Add', form_url: customeradd_cust_path%>
+
+          </div>
+</div>
+</div>
+</div>
+<!--Closed  AAd Customer and Conmpany Model -->
+
+
+
+     
+  
+
+
+
+<!--Closed Add Advertisement Model -->
+
+<div class="modal fade bd-example-modal-lg" id="add_advertisement" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"> Advertisement Details </h5>
+        <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+       </div>   
+
+      <div class="modal-body">
+
+        <%= render 'customer/advertisement_plan', form_method: 'post', form_action: 'Adver', form_url: add_advertisement_path%>
+      </div>
+</div>
+</div>
+</div>
+
+
+<!-- Update_user_model -->
+
+
+<!-- Modal Close User-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+$(document).on('change', '#type_of_adv', function() {
+    var selectedOption = $(this).val();
+    if (selectedOption) {
+      $.ajax({
+        url: '/submedia_for_pricing',
+        data: { selected_option: selectedOption, search_action: 'customer_form' },
+        dataType: 'json',
+        success: function(data) {
+  
+        var options = '<option value="">Select a Sub Media</option>';
+          data.forEach(function(sub_media) {
+            
+            options += '<option value="' + sub_media[1] + '">' + sub_media[0] + '</option>';
+          });
+          $('#sub_types').html(options);
+        }
+      });
+    } 
+  else {
+      $('#sub_types').html('Sub Media not Exist');
+    }
+  });
+
+
+
+
+
+
+
+function closeModal() {
+  $('#add_new_customer').modal('hide') 
+  $('#Update_customer_model').modal('hide') 
+  $('#add_advertisement').modal('hide') 
+  $("#Add")[0].reset()
+  
+    $('#View_customer_model').modal('hide');
+    $('#delete_cust_model').modal('hide') 
+    $('#Add_Asset_model').modal('hide') 
+  }
+
+  function add_customer() {
+    $('#add_new_customer').modal('show');
+  }
+
+
+
+
+function edit_cust_details(id,form_action){
+      var act = form_action
+$.ajax({
+  url: `/details_for_edit/${id}`,
+  method: "GET",
+  success: function(customer) {
+
+      if(act == "Adver"  || act == "AD_Update" || act == "AD_View" ){
+        $("#add_advertisement").modal('show');
+      }
+
+    var options = '<option value="">Select Cutomer Bussiness</option>';
+    customer[1].forEach(function(busi_name) {
+      
+      options += '<option value="' + busi_name[1] + '">' + busi_name[0] + '</option>';
+    });
+    $('#'+act+ '_select_business').html(options);
+    $('#'+act+ '_business_detail_id').html(options);
+
+        if (act == "View" || act == "Update" ) {
+            $("#"+ form_action)[0].reset();
+            $('#' + act +'_customer_model').modal('show');
+            var modalContent = $('#' + act +'_customer_model.modal-content');
+            modalContent.find('.modal-title').text(act + ' Customer and Advertisement');
+            var form = modalContent.find("#" + form_action);
+            form.attr('id', act);
+            form.attr('form_action', act);
+            console.log(customer[0])
+
+                $('#'+act+ '_first_name').val(customer[0].first_name);
+                $('#'+act+ '_last_name').val(customer[0].last_name);
+                $('#'+act+ '_phone_number').val(customer[0].phone_number);
+                $('#'+act+ '_cust_email').val(customer[0].cust_email);
+                $('#'+act+ '_customer_state').val(customer[0].customer_state);
+                $('#'+act+ '_customer_district').val(customer[0].customer_district);
+                $('#'+act+ '_cust_address').val(customer[0].cust_address);
+                $('#Update_cust_id').val(customer[0].id);
+
+                          $("#"+ act +"_select_business").on("change", function() {
+                        const selectedValue = $("#"+ act +"_select_business").val();
+                          $.ajax({
+                          type: 'GET',
+                          url: '/fetch_specific_business_data',
+                          data: { selectedValue: selectedValue },
+                          dataType: 'json',
+                          success: function(business) {
+                                $('#'+act+ '_business_name').val(business.business_name);
+                                $('#'+act+ '_select_business').val(business.customer_id);
+                                $('#'+act+ '_business_mail').val(business.business_mail);
+                                $('#'+act+ '_business_sector').val(business.business_sector);
+                                $('#'+act+ '_business_mobile_number').val(business.business_mobile_number);
+                                $('#'+act+ '_business_state').val(business.business_state);
+                                $('#'+act+ '_business_district').val(business.business_district);
+                                $('#'+act+ '_business_address').val(business.business_address);
+                                $('#busi_id').val(business.id);
+                          },
+                          error: function(error) {
+
+                          }
+                        });
+                      });
+              }
+
+               if (act == "View") {  
+                        var form = document.getElementById("View");
+                        var elements = form.elements;
+                        for (var i = 0; i < elements.length; i++) {
+                          elements[i].disabled = true;
+                        }
+                        $("#View_select_business").prop("disabled", false);
+                        $('#View_closeButton').prop("disabled", false);
+                        $('#View_Detail').prop("disabled", false);
+                        $('#View_Detail').hide();
+                        $('#View_clearButton').hide();     
+                }
+  }
+})
+   }
+
+      function delete_cust(active,remove,cust_id,cust_action){
+          $('#delete_cust_model').modal('show')
+          $('#is_active').val(active)
+          $('#is_remove').val(remove)
+          $('#cust_delete_id').val(cust_id)
+          $('#cust_action').val(cust_action)
+         }
+
+      function adv_details(id){
+        //$('#add_advertisement').modal('show')
+        }
+
+
+
+
+   
+
+</script>
+
+
+
+

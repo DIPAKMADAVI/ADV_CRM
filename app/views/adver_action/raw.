@@ -1,0 +1,74 @@
+<div class="actions-icons"> 
+                  <!-- 
+               <%#= formatted_date = adv.date_of_birth.present? ? adv.date_of_birth.strftime("%Y-%m-%d") : "yyyy/mm/dd" %>
+             
+
+    
+                    <button class="deletebtn"  onclick="edit_advertisement_plan_infos('<%= adv.firstname %>','<%= adv.lastname %>','<%= adv.gender %>','<%= adv.role_id %>','<%= adv.department_id%>','<%= adv.email %>','<%= formatted_date %>','<%= adv.phone_no %>','<%= adv.state %>','<%= adv.district %>','<%= adv.city %>','<%= adv.user_address %>')">
+                         <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                     </button>
+
+                     <% if (adv.is_active == true  &&  adv.is_remove == false) %>
+                     <button class="deletebtn" onclick="delete_user('<%=adv.id %>','<%= adv.is_active %>','<%= adv.is_remove %>','deactivate')" >                    
+                     <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                     </button>
+                     <% end %>
+
+
+                      <% if (adv.is_active == false  &&  adv.is_remove == true) %>
+                     <button class="deletebtn" onclick="delete_user(<%= adv.id %>,'<%= adv.is_active %>','<%= adv.is_remove %>','activate')" >     
+                         <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                         </button>
+                      <% end %>
+
+                     <button class="deletebtn"  onclick="view_advertisement_plan_infos('<%= adv.firstname %>','<%= adv.lastname %>','<%= adv.gender %>','<%= adv.role_id %>','<%= adv.department_id %>','<%= adv.email %>','<%= formatted_date %>','<%= adv.phone_no %>','<%= adv.state %>','<%= adv.district %>','<%= adv.city %>','<%= adv.user_address %>')" >
+                     <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                     </button>
+                     -->
+                 </div>
+         </td>
+
+
+            <div class="form-group col-md-3 pt-0 " >
+                    <label class="text-secondary text-xs">Media Asset</label>
+                    <%=f.select :media_type_cont, options_for_select(select_media_asset), {prompt: "Select Media"}, { class: 'form-control'} %>              
+                    </div>
+                    
+                    <div class="form-group col-md-3 pt-0" >
+                    <%#= label_tag :state, " Select State" %>
+                    <label class="text-secondary text-xs">Sub Media Type</label>
+                    <%=f.select :sub_media_type_eq, options_for_select(select_sub_media_asset), {prompt: "Select select Sub Media"}, { class: 'form-control'} %>              
+                    </div>
+
+                    <div class="form-group col-md-3" pt-0>
+                    <%#= label_tag :city, "Select City" %>
+                    <label class="text-secondary text-xs">District</label>
+                    <%=f.select :title_of_adv_matches, options_for_select(select_dept_city), {prompt: "Select  District"}, { class: 'form-control'} %>              
+                    </div>
+                    
+
+
+
+
+                        qq = SelectedPlan.joins(:advertisement_plans).select(:advertisement_detail_id).group(:advertisement_detail_id)
+                       xx = []
+                       qq.each do |q|
+                         aa = SelectedPlan.where(advertisement_detail_id: (q.advertisement_detail_id))
+                                aa.each do |a|
+                                name = a.pricings.media_assets.media_type
+                                xx << name
+                                end
+                        end 
+                           x = (xx.uniq.cpunt)
+                                x = x. join(", ")
+                         AdvertisementPlan.find(q.advertisement_detail_id).update(selected_media:x)
+
+
+
+
+                         all_p = AdvertisementPlan.all
+                         
+                        all_p.each do |a|
+                          s_p = SelectedPlan.where(advertisement_details_id:a.id)
+                          plan_coun = a.joins(:advertisement_detail).where('advertisement_details.title_of_adv = ?', adv.title_of_adv)
+                        end

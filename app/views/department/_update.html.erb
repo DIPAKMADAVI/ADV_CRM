@@ -1,0 +1,46 @@
+
+<%= form_with(url: form_url, method: form_method) do |form| %>
+<%#= form_with url: "/update_department", method: :post do |form|    %>
+  
+    <%= form.hidden_field :"dept_id", name: 'id' %>
+
+    <div class: "class"form-group""> 
+    <%=form.hidden_field:update_dept_id, name:"id"%>
+    <%= form.label :name , " Department Name " %>
+    <%= form.text_field :update_dept_name, class: 'form-control',name: 'dept_name' %>
+    </div>
+    <br>
+    <div class: "form-group">
+    <%= form.label :state , "Department State" %>
+    <%#= form.text_field :update_dept_state, class: 'form-control', name:'dept_state' ,required: true%>
+    <%= form.select(:update_dept_state, options_for_select(select_all_state), {include_blank: 'select a state', name:'dept_state'},{ class:'form-control',required: true} ) %>
+    
+    </div>
+    <br>
+    <div class: "form-group">
+    <%= form.label :dept_city , " Department City" %>
+    <%#= form.text_field :city,class:'form-control', name:'city' ,required: true %>
+    <%= form.select(:city, options_for_select(select_all_district), {include_blank: 'select a state', name:'city'},{ class:'form-control',required: true} ) %>
+
+    </div>
+    <br>
+    <div class: "form-group">
+    <%= form.label :desc , "Descriptionn" %>
+    <%= form.text_area :description, required: true , row:4, class: 'form-control',name:'description', required: true %>
+    </div>
+    <br>
+    <div class="modal-footer">
+    <%= form.submit 'Update Department', class:'btn btn-primary' %>        
+    </div>
+            
+    
+  <% end %>
+
+
+
+<script>
+
+
+
+
+  </script>

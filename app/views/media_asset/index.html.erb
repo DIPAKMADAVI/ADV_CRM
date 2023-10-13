@@ -1,0 +1,147 @@
+<%= render "media_asset/form"%>
+
+
+<!-- Modal Start Edit  Asset-->
+
+ <div class="modal fade bd-example-modal-lg" id="edit_media_asset" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Update---Media </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'media_asset/update_asset', form_method: 'post', form_action: 'Update', form_url: add_asset_path %>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default"  onclick="closeModal()"  data-dismiss="modal">Ccclose</button>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Close edit -->
+
+
+
+
+
+<!-- Modal Start view -->
+
+
+    <div class="modal fade bd-example-modal-lg" id="view_media_asset" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> View Meida Asset  </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+
+              <div class="modal-body">
+        
+              <%= render 'media_asset/view' %>
+
+
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default"  onclick="closeModal()"  data-dismiss="modal">Close</button>
+                </div>
+            </div>
+  </div>
+   </div>
+  </div>
+ 
+
+
+            
+            
+   
+            
+                    
+            <!-- Model start delete items -->
+            <div class="modal fade" id="delete_media_asset" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Remove meida</h5>
+                            <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <%= form_with(url: remove_asset_path, method: 'get', id: "removemeida_form") do |f| %>
+                                
+                            <div class="modal-body">
+                                <p>Are you sure you want to <%= params[:action_name] %> the ................</p>
+                            </div>
+                            <%= f.hidden_field :is_active, name:'is_active' %>
+                            <%= f.hidden_field :is_remove,  name:'is_remov' %>
+                            <%= f.hidden_field :meida_id, name: 'id' %>
+                            <%= f.hidden_field :media_action, name:'media_action' %>
+                            <div class="modal-footer">
+                           
+                            <% if params[:action_name] == "active" %>
+                            <button type="submit" class="btn btn-primary">Activate</button> 
+                            <% end %>
+                            <% if params[:action_name] == "removed"   || params[:action_name] == "nil" || params[:action_name].blank? %>
+                            <button type="submit" class="btn btn-warning">Deactivate</button>
+                             <% end %>
+            
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Close delete items-->
+            
+            
+    
+
+
+
+
+<script>
+
+function view_media(media_type, sub_media_type, state, district, town_city, area_location, dimentions, number_of_count, decimal){
+console.log (media_type, sub_media_type, state, district, town_city, area_location, dimentions, number_of_count, decimal)
+$('#view_media_asset').modal('show')
+    $('#view_media_type').val(media_type);   
+    $('#view_sub_media_type').val(sub_media_type);
+    $('#view_state').val(state);   
+    $('#view_district').val(district);
+    $('#view_town_city').val(town_city);
+    $('#view_area_location').val(area_location);
+    $('#view_dimentions').val(dimentions);   
+    $('#view_number_of_count').val(number_of_count);
+ 
+
+  }
+  
+  function delete_media(media_id,active,remove,media_action){
+    $('#is_active').val(active)
+    $('#is_remove').val(remove)
+    $('#meida_id').val(media_id)
+    $('#media_action').val(media_action)
+    $('#delete_media_asset').modal('show')
+ }
+
+  function closeModal() {
+    $('#view_media_asset').modal('hide');
+    $('#edit_media_asset').modal('hide') 
+    $('#delete_media_asset').modal('hide') 
+    $('#Add_Asset_model').modal('hide') 
+    
+    }
+
+
+  function edit_media(a,b,c,d,e){
+      $('#edit_media_asset').modal('show') 
+     //  $('#media_name').val(a)
+      //$('#media_state').val(b)
+      //$('#description').val(c)          
+    }
+</script>

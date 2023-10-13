@@ -1,0 +1,82 @@
+
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+       
+ <div class="col-sm-8 m-2">
+    <%= search_form_for @q, url: campaign_index_path, method: :get do |f| %>
+        
+    <% end %>
+</div>
+
+    <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+        <%#= link_to "Active Campaign", user_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+        <%#= link_to "Remove Campaign", user_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+    </div>
+ </div>
+</div>
+
+
+<div class="table-headtitle">
+<h4>
+<div id="Media_Asset_Count">Total Campaign - (<%#= @campaigns.count %>)</div>
+
+</h4>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script >
+
+$(document).ready(function() {
+  // Code to execute when the document is ready
+alert('ok')
+  const users = [
+    { id: 1, name: 'User 1' },
+    { id: 2, name: 'User 2' },
+    { id: 3, name: 'User 3' }
+  ];
+
+  const availableUsersDiv = $('#available-users');
+  users.forEach(user => {
+    availableUsersDiv.append(`<div><input type="checkbox" class="user-checkbox" value="${user.id}">${user.name}</div>`);
+  });
+
+  $('.user-checkbox').on('change', function() {
+    const userId = $(this).val();
+    const userDiv = $(this).parent();
+
+    if ($(this).prop('checked')) {
+      $('#selected-users').append(userDiv);
+    } else {
+      // If checkbox is unchecked, move the user back to the available users column
+      $('#available-users').append(userDiv);
+    }
+
+    // Update hidden input with selected user IDs
+    const selectedUserIds = $('#selected-users .user-checkbox:checked').map(function() {
+      return $(this).val();
+    }).get();
+    $('#selected-user-ids').val(selectedUserIds);
+  });
+
+  // Display an "ok" alert after creating the user list
+
+});
+
+</script>
+

@@ -1,0 +1,328 @@
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+
+    
+
+
+       
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#AAdd_pricing"> Add pricing </button>
+            <%= link_to "Active Pricing", pricing_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove Pricing", pricing_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-headtitle">
+<h4><div id="Media_Asset_Count">Total Priceing Model - <%= @Pricing_data.count %>  </div> </h4>
+</div>
+  
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Ser. No. </th>
+            <th scope="col">Media Asset</th>
+            <th scope="col">Sub Media<</th>
+            <th scope="col"> Price Model</th>
+            <th scope="col"> Area/Location</th>
+            <th scope="col"> Price</th>
+            <th scope="col">Action </th>
+            </tr>
+        </thead>  
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @Pricing_data.each do |price| %>
+<% location = [price.media_assets.state, price.media_assets.district, price.media_assets.town_city, price.media_assets.area_location].compact.join(', ') %>
+                <tr >
+                <td ><%= price.id %></td>
+                <td ><%= price.media_assets.media_type %></td>
+                <td ><%= price.media_assets.adv_channel.sub_channal_name %></td>
+                <td >--<%= price.price_scheme %>--</td>
+                <td >--<%= location %>---</td>
+                <td >--<%= price.price %>--</td>
+                <td> 
+                       <div class="actions-icons"> 
+                         <% aa = price.media_assets %>
+                           <% subchannel = [aa.media_type,aa.adv_channel.sub_channal_name,aa.state,aa.district,aa.area_location,aa.dimentions,aa.number_of_count].compact.join(', ') %>
+                           <button class="deletebtn"  onclick="edit_pricing('<%= price.media_assets.adv_channel.channel_name %>','<%= price.media_assets.adv_channel.sub_channal_name %>','<%= price.price_scheme %>','<%= price.price %>','<%= subchannel %>')">
+                                <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                            </button>
+
+                            <% if (price.is_active == true  &&  price.is_remove == false) %>
+                            <button class="deletebtn" onclick="delete_price('<%=price.id %>','<%= price.is_active %>','<%= price.is_remove %>','deactivate')" >                    
+                            <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                            </button>
+                            <% end %>
+    
+    
+                             <% if (price.is_active == false  &&  price.is_remove == true) %>
+                            <button class="deletebtn" onclick="delete_price(<%= price.id %>,'<%= price.is_active %>','<%= price.is_remove %>','activate')" >     
+                                <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                                </button>
+                             <% end %>
+
+                            <button class="deletebtn"  onclick="view_media('<%= price.media_assets.adv_channel.channel_name %>','<%= subchannel %>','<%= price.price_scheme %>','<%= price.price %>')" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                            </button>
+                        </div>
+                </td>
+              
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @Pricing_data, class: 'custom-pagination' %>
+</div>
+</div>
+
+<!-- Modal Start Add Price -->
+
+   <div class="modal fade bd-example-modal-lg" id="AAdd_pricing" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Add Price </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'pricing/form', form_method: 'post', form_action: 'Add', form_url: pricing_create_path %>
+              </div>
+     </div>
+    </div>
+  </div>
+<!-- Modal Close User-->
+
+
+
+<!-- Modal Start update price  -->
+
+   <div class="modal fade bd-example-modal-lg" id="update_price" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Upadte Price  </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'pricing/form', form_method: 'post', form_action: 'Update', form_url: pricing_create_path %>
+              
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close view-->
+
+
+
+<!-- Modal Start View Price  -->
+
+   <div class="modal fade bd-example-modal-lg" id="view_pricing_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> View Price  </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+              <%= form_with(url: pricing_create_path, method: :post) do |form| %>
+                <div class="form-group">
+                <%= form.label :media %>
+                <%= form.text_field :view_media,  class: 'form-control', disabled: true %>
+                </div>
+              
+              
+                  <div class="form-group">
+                     <%= form.label :sub_media_id %>
+                     <%= form.text_field :view_sub_media,  class: 'form-control', disabled: true %>
+                   </div>
+                
+              
+              
+                   <div class="form-group">
+                     <%= form.label :price_scheme %>
+                     <%= form.text_field :viev_price_scheme,  class: 'form-control', disabled: true %>
+                   </div>
+                 
+                   <div class="form-group">
+                     <%= form.label :price %>
+                     <%= form.text_field :view_price,  class: 'form-control', disabled: true %>
+                     <small class="text-muted">Please enter a valid price</small>
+                   </div>
+                 
+                   </div>
+                   <div class="modal-footer">
+                   <button type="button" class=" btn btn-secondary"  onclick="closeModal()"  data-dismiss="modal">Close</button>            
+                   </div>
+               
+                 <% end %>
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close view-->
+
+
+<!-- Model start delete items -->
+<div class="modal fade" id="delete_pricing_model" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Remove pricing</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <%= form_with(url: pricing_remove_path, method: 'get', id: "removepricing_form") do |f| %>
+                    
+                <div class="modal-body">
+                    <p>Are you sure you want to <%= params[:action_name] %> the ................</p>
+                </div>
+                <%= f.hidden_field :is_active, name:'is_active' %>
+                <%= f.hidden_field :is_remove,  name:'is_remov' %>
+                <%= f.hidden_field :pricing_id, name: 'id' %>
+                <%= f.hidden_field :pricing_action, name:'pricing_action' %>
+                <div class="modal-footer">
+               
+                <% if params[:action_name] == "active" %>
+                <button type="submit" class="btn btn-primary">Activate</button> 
+                <% end %>
+                <% if params[:action_name] == "removed"   || params[:action_name] == "nil" || params[:action_name].blank? %>
+                <button type="submit" class="btn btn-warning">Deactivate</button>
+                 <% end %>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- Modal Close delete items-->
+
+
+
+
+
+
+
+
+
+
+<script>
+
+$(document).ready(function() {
+  $('.custom-pagination').addClass('pagination justify-content-center');
+  $('.custom-pagination span').addClass('page-item previous_page disabled');
+  $('.custom-pagination em').addClass('page-item current');
+  $('.custom-pagination a').addClass('page-item');
+  $('.custom-pagination .page-item .page-link').addClass('page-link');
+});
+
+
+function view_media(media_type, sub_media_type,pricing_scheme,price){
+    $('#view_pricing_model').modal('show')
+    $('#view_media').val(media_type) 
+    $('#view_sub_media').val(sub_media_type);
+    $('#viev_price_scheme').val(pricing_scheme);   
+    $('#view_price').val(price);
+ 
+  }
+  
+  function delete_price(pricing_id,active,remove,pricing_action){
+    $('#is_active').val(active)
+    $('#is_remove').val(remove)
+    $('#pricing_id').val(pricing_id)
+    $('#pricing_action').val(pricing_action)
+    $('#delete_pricing_model').modal('show')
+ }
+
+  function closeModal() {
+    $('#view_pricing_model').modal('hide');
+    $('#update_price').modal('hide') 
+    $('#delete_media_asset').modal('hide') 
+    $('#Add_Asset_model').modal('hide') 
+    
+    }
+
+
+  function edit_pricing(a,b,c,d,e){
+      $('#update_price').modal('show') 
+      $('#Update_media').val(a) 
+      //$('#'Update_sub_media_id).val(b);
+      $('#Update_price_scheme').val(c);   
+      $('#Update_price').val(d);    
+console.log(e)
+   var options = '<option value="">' + e + '</option>';
+      $('#Update_sub_media_id').html(options);
+    }
+
+
+
+$(document).on('change', '#Add_media', function() {
+    var selectedOption = $(this).val();
+    if (selectedOption) {
+      $.ajax({
+        url: '/submedia_for_pricing',
+        data: { selected_option: selectedOption },
+        dataType: 'json',
+        success: function(data) {
+          console.log(data)
+  
+        var options = '<option value="">Select a Sub Media</option>';
+          data.forEach(function(sub_media) {
+            
+            options += '<option value="' + sub_media[1] + '">' + sub_media[0] + '</option>';
+          });
+          $('#Add_sub_media_id').html(options);
+          
+        
+        }
+      });
+    } 
+  else {
+      $('#sub_media_id').html('Sub Media not Exist');
+    }
+  });
+
+
+  $(document).on('change', '#Update_media', function() {
+    var selectedOption = $(this).val();
+    if (selectedOption) {
+      $.ajax({
+        url: '/submedia_for_pricing',
+        data: { selected_option: selectedOption },
+        dataType: 'json',
+        success: function(data) {
+        var options = '<option value="">Select a Sub Media</option>';
+          data.forEach(function(sub_media) {
+            
+            options += '<option value="' + sub_media[1] + '">' + sub_media[0] + '</option>';
+          });
+          $('#Update_sub_media_id').html(options);
+        
+        }
+      });
+    } 
+  else {
+      $('#sub_media_id').html('Sub Media not Exist');
+    }
+  });
+  
+
+
+
+</script>
+

@@ -1,0 +1,121 @@
+.firstbar{
+    padding: 1rem .5rem;
+}
+
+.ipsearch{
+    height: 40px;
+    outline: none;
+    /*  width: 180px; */
+    padding-left: 1rem;
+    /* border: none; */
+    border-radius: 5px;
+    border: 2px solid rgb(172, 212, 246);
+    /* box-shadow: 2px 2px 2px 2px rgb(210, 210, 210); */
+}
+
+.ipsearch::-webkit-input-placeholder{
+    font-size: .9rem;
+}
+
+.tbl{
+    /* background-color: yellow; */
+    max-height: 450px;
+}
+.tbl::-webkit-scrollbar{
+    display: none;
+}
+
+.actions-icons{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    border: none;
+
+}
+
+.action-icons-svg{
+    width: 22px;
+
+
+}
+
+
+.common-container{
+    width: 1600px;
+    height: 730px;
+    margin: 10px 0px;
+    
+  
+
+    
+}
+
+
+/* Testing  */
+#sidebar .side-menu li button{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #342E37;
+    border: none;
+    outline: none;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+#sidebar .side-menu li button .ic .sidemenu-icons{
+    width: 30px;
+}
+
+#sidebar .side-menu li button .ic{
+    min-width: 80px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.add-media-asset{
+    padding-right: 20px;
+    border-right: 1px solid #ddd;
+    width: 299px;
+   }
+
+.tbl2{
+    /* max-height: 400px; */
+}
+
+.table-headtitle1{
+    width: 100%;
+    height: 60px;
+    /* border: 1px solid rgb(233, 233, 233); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+   
+  
+
+}
+
+.table-headtitle{
+    width: 100%;
+    height: 50px;
+    border: 1px solid rgb(228, 228, 228);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    background-color: #bbb3bf;
+}
+
+.deletebtn{
+    border: none;
+    cursor: pointer;
+}
+.deletebtn:focus{
+    outline: none;
+}
+

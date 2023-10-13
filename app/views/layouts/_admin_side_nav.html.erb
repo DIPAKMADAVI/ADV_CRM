@@ -1,0 +1,131 @@
+
+<!-- SideBar Start-->
+
+<div>
+    <section id="sidebar">
+                <a href="#" class="brand">
+                    <div class="ic">
+                         <%= image_tag 'Img/logo.svg',  class:'imglogo' %>
+                    </div>
+                    <span class="text">Brandwave</span>
+                </a>
+                <ul class="side-menu top">
+                    <li class="active">
+                        <a href="index" id="dashboard_link">
+                            <div class="ic">
+                                <%= image_tag 'Img/dashboard.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/customer_index">
+                            <div class="ic">
+                                <%= image_tag 'Img/contacts.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Contacts & User</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/campaign_index">
+                            <div class="ic">
+                              <%= image_tag 'Img/Advertising.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Adv Campaign</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/contact_lead_index">
+                            <div class="ic">
+                                <%= image_tag 'Img/leads.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Contact Lead</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/creativity_index">
+                            <div class="ic">
+                                 <%= image_tag 'Img/creativity.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Adv Creativity</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/accounts_payments">
+                            <div class="ic">
+                              <%= image_tag 'Img/payment.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Accounts & Payments</span>
+                        </a>
+                    </li>
+
+                    <li>
+                    <a href="/media_asset">
+                            <div class="ic">
+                              <%= image_tag 'Img/configuration.svg',  class:'sidemenu-icons' %>
+                            </div>
+                            <span class="text">Master Configuration</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/report_analytics">
+                            <div class="ic">
+                    <%= image_tag 'Img/report.svg',  class:'sidemenu-icons' %>
+
+                            </div>
+                            <span class="text">Reporting and Analytic</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/help_support">
+                            <div class="ic">              
+                             <%= image_tag 'Img/support.svg',  class:'sidemenu-icons' %>
+
+
+                            </div>
+                            <span class="text">Help and Support</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+
+                
+    </section>
+        <!-- SideBar End -->
+
+
+  
+ </div>
+  
+        
+
+
+
+
+
+
+ 
+ <script>
+
+
+ $(document).ready(function() {
+    $('#myButton').click(function() {
+      $.ajax({
+        url: '/master_config',
+        type: 'GET',
+        success: function(response) {
+          $('#componentContainer').html(response);
+        },
+        error: function(xhr) {
+          // Handle error
+        }
+      });
+    });
+  });
+
+
+
+
+</script>
+

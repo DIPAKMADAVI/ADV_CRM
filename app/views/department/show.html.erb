@@ -1,0 +1,75 @@
+
+            <div class="modal-body">
+          <%= form_for @department do |form| %>
+
+            
+                    <div class: "class"form-group""> 
+                    <%= form.label :dept_name , " Department Name " %>
+                    <%= form.text_field :dept_name, class: 'form-control' %>
+                    </div>
+                    
+                    <div class: "form-group">
+                    <%= form.label :state_name , "Department State" %>
+                    <%= form.text_field :dept_state, class: 'form-control' %>
+                    </div>
+
+                    <div class: "form-group">
+                    <%= form.label :dept_city , " Department City" %>
+                    <%= form.text_field :city, class:'form-control'%>
+                    </div>
+                    
+                    <div class: "form-group">
+                    <%= form.label :desc , "Description" %>
+                    <%= form.text_area :description, class: 'form-control' %>
+                    </div>
+                  
+                  <% end %>
+
+                  </div>
+
+
+
+
+ <div class="modal modalleng2 fade" id="." tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Department Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <%= form_with url: "@department", method: :post do |form|    %>
+                <div class: "class"form-group""> 
+                <%= form.label :dept_name , " Department Name " %>
+                <%= form.text_field :dept_name, class: 'form-control',  placeholder: "Enter Department name", required: true, name: "dept[dept_name]" %>
+                </div>
+                
+                <div class: "form-group">
+                <%= form.label :state_name , "Department State" %>
+                <%= form.text_field :dept_state, class: 'form-control',  placeholder: "Enter City", required: true, name: "dept[dept_state]" %>
+                </div>
+
+                <div class: "form-group">
+                <%= form.label :dept_city , " Department City" %>
+                <%= form.text_field :dept_city,class:'form-control',   placeholder: "Enter state name", required: true, name: "dept[city]" %>
+                </div>
+                
+                <div class: "form-group">
+                <%= form.label :desc , "Description" %>
+                <%= form.text_area :desc, row:4, class: 'form-control',  placeholder: " description", name: "dept[description]"%>
+                </div>
+                
+
+              <% end %>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- Modal Close view-->
+
+
+

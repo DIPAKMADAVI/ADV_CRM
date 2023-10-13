@@ -1,0 +1,17 @@
+
+
+<% debugger %>
+<% debugger %>
+alert("js")
+
+
+<%if @message.present? %>
+$('#error_prompt').val("<%= @message%>")
+setTimeout(function() {
+  window.location.reload();
+}, 4000);
+
+<%elsif @error.present?%>
+$('#error_prompt').val("<%= @error %>")
+<%end %>
+

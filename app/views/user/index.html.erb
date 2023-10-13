@@ -1,0 +1,350 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+       
+ <div class="col-sm-8 m-2">
+    <%= search_form_for @q, url: user_index_path, method: :get do |f| %>
+        <div class="row align-items-center m-1">
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Name</label>
+                <%= f.text_field :firstname_cont, placeholder: 'Enter Users Name', class: 'form-control' %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">State</label>
+                <%#=f.select :dept_state_eq, options_for_select(select_dept_state), {prompt: "Select State"}, { class: 'form-control'} %>              
+
+                <%= f.select :state_eq, options_for_select(select_all_state), { prompt: "Select State " }, class: "custom-select"%>
+
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">District</label>
+                <%= f.select :district_eq, options_for_select(select_all_district), { prompt: "Select District " }, class: "custom-select" %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Username</label>
+                <%= f.text_field :username_eq, placeholder: 'Enter Usernamer', class: 'form-control' %>
+            </div>
+
+            <div class="form-group col-md-2 pb-4">
+                <label class="text-secondary text-xs">Mobile Number</label>
+                <%= f.text_field :phone_no_eq, id: 'phone_number', placeholder: 'Enter Mobile Number', class: 'form-control' %>
+            </div>
+
+            <div class="form-group col-md-2 d-flex align-items-end">
+                <%= f.submit 'Clear Form', type: 'reset', class: 'btn btn-dark m-1' %>
+                <button type="submit" class="btn btn-primary m-1">Search</button>
+            </div>
+
+        </div>
+    <% end %>
+</div>
+
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+            <button class="btn btn-success m-2" data-toggle="modal" data-target="#Add_User_model"> Add User </button>
+            <%= link_to "Active User", user_index_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove User", user_index_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-headtitle">
+<h4><div id="Media_Asset_Count">Total User - ( <%= @user_detail.count %> ) </div> </h4>
+</div>
+
+
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">User_id</th>
+            <th scope="col">User Name</th>
+            <th scope="col"> Email</th>
+            <th scope="col">Gender </th>
+            <th scope="col">Adv Department </th>
+            <th scope="col"> Role </th>
+            <th scope="col">Action </th>
+            </tr>
+        </thead>  
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @user_detail.each do |user| %>
+                <tr >
+                
+                <td ><%= user.id %></td>
+                <td ><%= user.firstname + ' ' + user.lastname %></td>
+                <td ><%= user.email %></td>
+                <td ><%= user.gender %></td>
+                <td ><%= user.role.role_name %></td>
+                <td ><%= user.department.dept_name %></td>
+                <td> 
+                <div class="actions-icons"> 
+
+               <% formatted_date = user.date_of_birth.present? ? user.date_of_birth.strftime("%Y-%m-%d") : "yyyy/mm/dd" %>
+
+                    <button class="deletebtn"  onclick="edit_user_details('<%= user.firstname %>','<%= user.lastname %>','<%= user.gender %>','<%= user.role_id %>','<%= user.department_id%>','<%= user.email %>','<%= formatted_date %>','<%= user.phone_no %>','<%= user.state %>','<%= user.district %>','<%= user.city %>','<%= user.user_address %>')">
+                         <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                     </button>
+
+                     <% if (user.is_active == true  &&  user.is_remove == false) %>
+                     <button class="deletebtn" onclick="delete_user('<%=user.id %>','<%= user.is_active %>','<%= user.is_remove %>','deactivate')" >                    
+                     <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                     </button>
+                     <% end %>
+
+
+                      <% if (user.is_active == false  &&  user.is_remove == true) %>
+                     <button class="deletebtn" onclick="delete_user(<%= user.id %>,'<%= user.is_active %>','<%= user.is_remove %>','activate')" >     
+                         <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                         </button>
+                      <% end %>
+
+                     <button class="deletebtn"  onclick="view_user_details('<%= user.firstname %>','<%= user.lastname %>','<%= user.gender %>','<%= user.role_id %>','<%= user.department_id %>','<%= user.email %>','<%= formatted_date %>','<%= user.phone_no %>','<%= user.state %>','<%= user.district %>','<%= user.city %>','<%= user.user_address %>')" >
+                     <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                     </button>
+                 </div>
+         </td>
+              
+                </tr>
+                <% ser_no =ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @user_detail , class: 'custom-pagination' %>
+    
+    <%#= will_paginate @media_asset ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+
+
+<!-- Modal Start Add User -->
+
+   <div class="modal fade bd-example-modal-lg" id="Add_User_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Add User </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'user/form', form_method: 'post', form_action: 'Add', form_url: user_create_path %>
+ 
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close User-->
+
+
+
+
+
+<!-- Update_user_model -->
+
+   <div class="modal fade bd-example-modal-lg" id="Update_user_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Update User </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'user/form', form_method: 'post', form_action: 'Update', form_url: user_create_path %>
+
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close User-->
+
+
+<!-- View_user_model -->
+
+   <div class="modal fade bd-example-modal-lg" id="view_user_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> View User </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'user/form', form_method: 'post', form_action: 'View', form_url: user_create_path %>
+              </div>
+              <div class="modal-footer">
+         <button type="button" class=" btn btn-secondary"  onclick="closeModal()"  data-dismiss="modal" > Close </button>            
+         </div>
+    </div>
+   </div>
+  </div>
+<!-- Modal Close User-->
+
+
+
+
+
+
+
+
+
+
+<!-- Model start delete items -->
+<div class="modal fade" id="delete_user_model" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Remove User</h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <%= form_with(url: user_remove_path, method: 'get', id: "removeuser_form") do |f| %>
+                    
+                <div class="modal-body">
+                    <p>Are you sure you want to <%= params[:action_name] %> the ................</p>
+                </div>
+                <%= f.hidden_field :is_active, name:'is_active' %>
+                <%= f.hidden_field :is_remove,  name:'is_remov' %>
+                <%= f.hidden_field :user_id, name: 'id' %>
+                <%= f.hidden_field :user_action, name:'user_action' %>
+                <div class="modal-footer">
+               
+                <% if params[:action_name] == "active" %>
+                <button type="submit" class="btn btn-primary">Activate</button> 
+                <% end %>
+                <% if params[:action_name] == "removed"   || params[:action_name] == "nil" || params[:action_name].blank? %>
+                <button type="submit" class="btn btn-warning">Deactivate</button>
+             <% end %>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- Modal Close delete items-->
+
+
+
+
+
+
+
+
+<script>
+
+function active_Users(b)
+{
+    alert(b)
+}
+
+function remove_crustomer(a)
+{
+    alert(a)
+}
+
+
+
+function view_user_details(firstname,lastname,gender,role,department,email,date_of_birth,phone_no,state,district,city,user_address){
+ 
+$('#view_user_modal').modal('show')
+ 
+  $('#View_firstname').val(firstname) 
+  $('#View_lastname').val(lastname);
+  $('#View_gender').val(gender);   
+  $('#View_role_id').val(role); 
+  $('#View_department_id').val(department);
+  $('#View_email').val(email);
+
+  $('#View_phone_no').val(phone_no);   
+  $('#View_state').val(state);
+  $('#View_district').val(district);   
+  $('#View_city').val(city);
+  $('#View_phone_no').val(phone_no);   
+  $('#View_user_address').val(user_address);
+  disableFormElements()
+
+//document.getElementById("View_date_of_birth").value = date_of_birth;
+$('#View_date_of_birth').val(date_of_birth);
+
+
+}
+  
+  
+  function delete_user(user_id,active,remove,user_action){
+    $('#delete_user_model').modal('show')
+    $('#is_active').val(active)
+    $('#is_remove').val(remove)
+    $('#user_id').val(user_id)
+    $('#user_action').val(user_action)
+    
+ }
+
+  function closeModal() {
+    $('#view_user_modal').modal('hide');
+    $('#Update_user_model').modal('hide') 
+    $('#delete_user_model').modal('hide') 
+    $('#Add_Asset_model').modal('hide') 
+    
+    }
+
+
+    function edit_user_details(firstname,lastname,gender,role,department,email,date_of_birth,phone_no,state,district,city,user_address){
+
+     $('#Update_user_model').modal('show') 
+     $('#Update_firstname').val(firstname) 
+     $('#Update_lastname').val(lastname);
+     $('#Update_gender').val(gender); 
+     $('#Update_role_id').val(role) 
+     $('#Update_department_id').val(department);
+     $('#Update_email').val(email);
+     $('#Update_date_of_birth').val(date_of_birth);
+     $('#Update_phone_no').val(phone_no);   
+     $('#Update_state').val(state);
+     $('#Update_district').val(district);   
+     $('#Update_city').val(city);
+     $('#Update_phone_no').val(phone_no);   
+     $('#Update_user_address').val(user_address);
+        }
+
+
+
+        function disableFormElements() {
+          var form = document.getElementById("View");
+          var elements = form.elements;
+          for (var i = 0; i < elements.length; i++) {
+            elements[i].disabled = true;
+          }
+
+        }
+
+
+window.onload = function() {
+  setTimeout(function() {
+    const form = document.getElementById('Add')
+    form.reset(); 
+  }, 1000); 
+};
+
+
+</script>
+
+
+
+

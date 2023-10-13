@@ -1,0 +1,147 @@
+
+
+<div  class="d-flex align-items-center justify-content-center p-1 ">
+  <%= form_with(url:form_url , method:form_method ,  id:form_action )  do |form| %>
+
+    <div class="row mt-2">
+      <div class="col">
+        <div class="row">
+          <%= form.label :first_name, class: "col-sm-5 col-form-label" %>
+          <div class="col-sm-7 pl-0">
+          <%= form.text_field :"#{form_action}_firstname", class: "form-control" %>  
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <%= form.label :last_name, class: "col-sm-5 col-form-label" %>
+          <div class="col-sm-7 pl-0">
+            <%= form.text_field :"#{form_action}_lastname", class: "form-control", required: true %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+    <div class="col">
+      <div class="row">
+        <%= form.label :department, class: "col-sm-5 col-form-label" %>
+        <div class="col-sm-7 pl-0">
+        <%#= form.select :department, options_for_select(select_all_department), {}, class: 'custom-select' %>
+        <%= form.select :"#{form_action}_department_id", options_for_select(select_all_department), { prompt: "Select Department" }, class: 'custom-select', required: true %>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="row">
+        <%= form.label :job_title, class: "col-sm-5 col-form-label" %>
+        <div class="col-sm-7 pl-0">
+        <%= form.select :"#{form_action}_role_id", options_for_select(select_all_role), { prompt: "Select Job Title" }, class: 'custom-select', required: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mt-2">
+  <div class="col">
+      <div class="row">
+      <%= form.label :date_of_birth, class: "col-sm-5 col-form-label" %>
+      <div class="col-sm-6 pl-0">
+      <%= form.date_field :"#{form_action}_date_of_birth", start_year: Date.current.year - 100, end_year: Date.current.year, order: [:month, :day, :year], class: "form-control", required: true %>
+      </div>
+      </div>
+  </div>
+  <div class="col">
+      <div class="row">
+      <%= form.label :gender, class: "col-sm-5 col-form-label" %>
+      <div class="col-sm-7 pl-0">
+      <%= form.select :"#{form_action}_gender", ["Male", "Female", "Other"], { prompt: "Select" }, class: "custom-select", required: true %>
+      </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="row mt-2">
+  <div class="col">
+    <div class="row">
+      <%= form.label :email, class: "col-sm-5 col-form-label" %>
+      <div class="col-sm-7 pl-0">
+      <%#= form.email_field :email, class: "form-control", value: '' %>
+        <%= form.email_field :"#{form_action}_email", class: "form-control",value: '', autocomplete: 'new-email', required: true  %>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="row">
+      <%= form.label :mobile_number, class: "col-sm-5 col-form-label" %>
+      <div class="col-sm-7 pl-0">
+      <%= form.text_field :"#{form_action}_phone_no" , type: "text", pattern: "[0-9]*", class: "form-control", placeholder: "Enter your mobile number", required: true %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2">
+<div class="col">
+  <div class="row">
+    <%= form.label :state, class: "col-sm-5 col-form-label" %>
+    <div class="col-sm-7 pl-0">
+    <%= form.select :"#{form_action}_state", options_for_select(select_all_state), { prompt: "Select " }, class: "custom-select", required: true %>
+    </div>
+  </div>
+</div>
+<div class="col">
+  <div class="row">
+    <%= form.label :district, class: "col-sm-5 col-form-label" %>
+    <div class="col-sm-7 pl-0">
+    <%= form.select :"#{form_action}_district", options_for_select(select_all_district), { prompt: "Select " }, class: "custom-select", required: true %>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row mt-2 pb-4">
+<div class="col">
+  <div class="row">
+    <%= form.label :city, class: "col-sm-5 col-form-label" %>
+    <div class="col-sm-7 pl-0">
+    <%= form.text_field :"#{form_action}_city", class: "form-control", required: true %>
+    </div>
+  </div>
+</div>
+<div class="col">
+  <div class="row">
+    <%= form.label :enter_password, class: "col-sm-5 col-form-label" %>
+    <div class="col-sm-7 pl-0">
+      <%= form.password_field :"#{form_action}_password",value: '' , class: "form-control", required: true %>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+<%= form.label :address, class: "col-sm-2 col-form-label" %>
+<div class="col-sm-10 pl-0">
+  <%= form.text_area :"#{form_action}_user_address", class: "form-control", required: true %>
+</div>
+</div>
+
+</div>
+
+
+
+<% if form_action == "Update" || form_action == "Add" %>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal" id="<%= form_action %>_closeButton">Close</button>
+    <%= form.submit 'Clear Form', type: 'reset', class: 'btn btn-dark', id: "#{form_action}_clearButton" %>
+    <%= form.submit "#{form_action} user", class: 'btn btn-primary', id: "#{form_action}_submitButton" %>
+  </div>
+<% end %>
+
+    
+  <% end %>
+</div>
+
+
+
+

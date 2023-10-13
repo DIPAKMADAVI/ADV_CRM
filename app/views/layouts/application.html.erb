@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyAdvCrm</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <%#= javascript_importmap_tags %>
+    <%#= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%#= javascript_include_tag 'application' %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= turbo_frame_tag 'turbo-frames' %>
+    <%= javascript_include_tag "application" %>
+
+  </head>
+
+  <body>
+
+    <% if current_user.present? %>
+
+        <% if (current_user.is_agent? || current_user.is_super_admin?) || !(request.path == "/") ||  session[:user_id].nil? %>
+            <%= render 'layouts/admin_header' %>
+            <%= render 'layouts/admin_page_header' %>
+            <%= render 'layouts/admin_side_nav'%>
+            <section id="maincontentpage" width: calc(100% - 80px); left: 80px;>
+            <%= yield %>
+            <section>
+        <% else %> 
+           <%= yield %>
+        <% end %> 
+  
+    <% else %>
+        <div>
+        <%= yield%>
+        </div>
+    <%end%>
+
+  <script type="text/javascript">
+
+  setTimeout(function(){
+      $('.alert').fadeOut();
+  }, 4000);
+
+</script>
+
+  </body>
+</html>
+
+
+<script>
+
+ /* 
+
+const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+
+allSideMenu.forEach(item=>{
+    const li = item.parentElement;
+
+    item.addEventListener('click', function(){
+        allSideMenu.forEach(i=>{
+            i.parentElement.classList.remove('active');
+        })
+        li.classList.add('active');
+    })
+})
+ */
+
+const allSideMenu = document.querySelectorAll('#sidebar .side-menu li a');
+
+allSideMenu.forEach(item=>{
+    const li = item.parentElement;
+
+    item.addEventListener('click', function(){
+        allSideMenu.forEach(i=>{
+            i.parentElement.classList.remove('active');
+        })
+        li.classList.add('highlight');
+    })
+})
+
+</script>
+
+<script>
+     const menuBar = document.querySelector('.icc');
+     const sidebar = document.getElementById('sidebar');
+     const menuside = document.getElementById('mainsection')
+     const maincontentpg = document.getElementById('maincontentpage')
+     const headercontent = document.getElementById('content')
+   
+     menuBar.addEventListener('click', function(){
+         sidebar.classList.toggle('hide');
+       
+     })
+   
+     var clicktoggle = 1;
+     menuBar.addEventListener('click', function(){
+         if(clicktoggle){
+             menuside.style.width = 'calc(100% - 80px)'
+             menuside.style.left = '80px'
+   
+             maincontentpg.style.width = 'calc(100% - 80px)'
+             maincontentpg.style.left = '80px'
+   
+             headercontent.style.width = 'calc(100% - 80px)'
+             headercontent.style.left = '80px'
+   
+             clicktoggle =0;
+         }else{
+             menuside.style.width = 'calc(100% - 280px)'
+             menuside.style.left = '280px'
+   
+             maincontentpg.style.width = 'calc(100% - 280px)'
+             maincontentpg.style.left = '280px'
+   
+             headercontent.style.width = 'calc(100% - 280px)'
+             headercontent.style.left = '280px'
+             clicktoggle=1
+         }
+     })
+
+     </script>
+    
+
+     <script>
+
+
+function myConfirm(id) {
+    var result = confirm("you really Want to delete the meeting ?");
+    if (result==true) {
+        const elem = document.getElementById("meet"+id)
+        elem.remove();
+        $.ajax({
+            type : 'post',
+            url : `/video_meetings/delete_meeting/${id}`,
+            contentType: url.json,
+            success : function(response){      
+            },
+            error:function(e){   
+            }
+        })
+    } else {
+    return false;
+    }
+}
+
+$(document).ready(function() {
+  $('.custom-pagination').addClass('pagination justify-content-center pt-2');
+  $('.custom-pagination span').addClass('page-item previous_page disabled');
+  $('.custom-pagination em').addClass('page-item current');
+  $('.custom-pagination a').addClass('page-item');
+  $('.custom-pagination .page-item .page-link').addClass('page-link');
+});
+
+
+     </script>
+
+   

@@ -1,0 +1,105 @@
+
+<%= form_with(url: form_url, method: form_method) do |form| %>
+<div class="form-group">
+<label for="field1"> advertisement Information </label>
+
+    <div class="form-group bg-gray p-2 m-0 border border-primary shadow-lg text-justify col-12">        
+    
+                <div class="mt-1 p-1">
+                    <label for="field1">Labe 1    :   </label>
+                    <div  id="field1"></div>
+
+                    <label for="field2">Label 2:</label>
+                    <div id="field2"><%#=  %></div>
+                </div>
+
+                <div class="mt-0 p-1">
+                    <label> Label 3 : </label>
+                    <div id="field3"> <%#= %> </div>  
+
+                    <label> Label 4: </label>
+                    <div id="field4"> <%#=  %> </div>
+                </div>
+
+                <div class="mt-0 p-1">
+                    <label> Label 5: </label>
+                    <div id="field5"> <%#=  %> </div>
+                
+                    <label> Label 6: </label>
+                    <div id="fiel6> <%#=  %> </div>
+                </div>
+
+                <div class="mt-0 p-1">
+                    <label> Label 7: </label>
+                    <div id="field7"> <%#=  %> </div>
+                
+                    <label> Label 8: </label>
+                    <div id="field8"> <%#=  %> </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="form-group pt-2">
+        <label for="field1"> select user For campaign </label>
+        <%= form.hidden_field :selected_user_ids, id: 'selected-user-ids' %>
+
+          <div class="row border border-primary pt-2 m-0">
+            <div class="col-md-6">
+              <h5>Available Users</h5>
+              <div id="available-users" class="user-list border border-primary">
+                <!-- List of users with checkboxes -->
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h5>Selected Users</h5>
+              <div id="selected-users" class="user-list border border-primary">
+                <!-- Selected users with checkboxes -->
+              </div>
+            </div>
+          </div>
+      </div>
+
+<div class="row pt-3">
+<div class="col-md-6">
+  <div class="form-group ">
+    <%= form.label :campaign_start_from, class: "form-label" %>
+    <%= form.date_field :from_date, class: "form-control" %>
+  </div>
+</div>
+<div class="col-md-6">
+  <div class="form-group ">
+    <%= form.label :campaign_end_at, class: "form-label" %>
+    <%= form.date_field :to_date, class: "form-control" %>
+  </div>
+</div>`
+</div>
+
+<div class="row pt-0">
+<div class="col-md-6">
+  <div class="form-group ">
+    <%= form.label :more_details , class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", placeholder: "Enter your description" %>
+
+  </div>
+</div>
+<div class="col-md-6">
+  <div class="form-group ">
+    <%= form.label :"", class: "form-label" %>
+    <%#= form.date_field :to_date, class: "form-control" %>
+  </div>
+</div>`
+</div>
+
+
+<div class="d-flex justify-content-center pb-3 shadow-sm ">
+ <%= form.submit "Submit", class: "btn btn-primary p-2 m-1" %>
+ <%= button_tag "Clear Form", type: "button", id: "clear-form-button", class: "btn btn-secondary p-2 m-15px" %>
+
+
+ 
+</div>
+</div>
+<% end %>
+
+

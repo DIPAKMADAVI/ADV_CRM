@@ -1,0 +1,134 @@
+
+<div class="common-container bg-white " style="border-radius: 15px;">
+<div class="row mt-2 d-flex justify-content-center align-items-center">
+    <div class="table-headtitle1">
+      <div class="col-sm-8">
+        <%= search_form_for @q, url: media_asset_path, method: :get do |f| %>
+
+            <div class="row d-flex align-items-center justify-content-around firstbar pt-0">
+                <div class="form-group col-md-3 pt-0 " >
+                <label class="text-secondary text-xs">Media Asset</label>
+                <%=f.select :media_type_cont, options_for_select(select_media_asset), {prompt: "Select Media"}, { class: 'form-control'} %>              
+                </div>
+                <div class="form-group col-md-3 pt-0" >
+                <%#= label_tag :state, " Select State" %>
+                <label class="text-secondary text-xs">Sub Media Type</label>
+                <%=f.select :sub_media_type_eq, options_for_select(select_sub_media_asset), {prompt: "Select select Sub Media"}, { class: 'form-control'} %>              
+
+                </div>
+                <div class="form-group col-md-3" pt-0>
+                <%#= label_tag :city, "Select City" %>
+                <label class="text-secondary text-xs">District</label>
+                <%=f.select :district_eq, options_for_select(select_dept_city), {prompt: "Select  District"}, { class: 'form-control'} %>              
+
+                </div>
+                
+                <div class="form-group col-md-3 pt-3 d-flex justify-content-center">
+                <%= f.submit :'Clear Form', type:'reset', class:'btn btn-dark m-1' %>
+                <button class="btn btn-primary m-1" >Search</button>
+                </div>
+            </div>
+              
+            <% end %>
+            </div>
+       
+        <div class="col-sm-4 firstbar d-flex justify-content-center align-items-center p-2 p-sm-0">
+
+            <button class="btn btn-success m-2" data-toggle="modal" id = "Add_Asset"> Add asset </button>
+            <%= link_to "Active Asset", media_asset_path(action_name: "removed"), class:"btn btn-secondary m-2"  %>
+            <%= link_to "Remove Asset", media_asset_path(action_name: "active"), class:"btn btn-danger m-2"  %>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<button id="my-button">Click  jq</button>
+<button id="my-button1">Click js</button> 
+-->
+<div class="table-headtitle">
+<h4><div id="Media_Asset_Count">Total Media Asset -( <%= @media_asset.count %> ) </div> </h4>
+</div>
+
+
+<div class="pb-2 table-responsive tbl2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Sr.No</th>
+            <th scope="col">Media Aseet</th>
+            <th scope="col">Sub Media Asset</th>
+            <th scope="col">State</th>
+            <th scope="col">District</th>
+            <th scope="col">Action </th>
+            </tr>
+        </thead>
+
+        <tbody>
+        <% ser_no = 1 %>
+            <% @media_asset.each do |media| %>
+                <tr > 
+                <td ><%= ser_no %></td>
+                <th scope="row"><%= media.media_type%></th>
+                <td><%=  media.adv_channel.sub_channal_name%></td>
+                <td><%= media.state %></td>
+                <td> <%= media.district %></td>
+                <td>
+                       <div class="actions-icons">
+                           <button class="deletebtn"  onclick="edit_media('<%= media.media_type %>', '<%=  media.adv_channel.sub_channal_name %>', '<%= media.state %>', '<%= media.district %>')">
+                                <img src="../../assets/edit2.svg" class="action-icons-svg" alt="">
+                            </button>
+
+                            <% if (media.is_active == true  &&  media.is_remove == false) %>
+                            <button class="deletebtn" onclick="delete_media(<%= media.id %>,'<%= media.is_active %>','<%= media.is_remove %>','deactivate')" >                    
+                            <img src="../../assets/delete.svg" class="action-icons-svg" alt="">
+                            </button>
+                            <% end %>
+    
+    
+                             <% if (media.is_active == false  &&  media.is_remove == true) %>
+                            <button class="deletebtn" onclick="delete_media(<%= media.id %>,'<%= media.is_active %>','<%= media.is_remove %>','activate')" >     
+                                <img src="../../assets/reactivate.svg" class="action-icons-svg" alt="">
+                                </button>
+                             <% end %>
+
+                            <button class="deletebtn"  onclick="view_media( '<%= media.media_type %>',  '<%=  media.adv_channel.sub_channal_name %>',  '<%= media.state %>',  '<%= media.district %>',  '<%= media.town_city %>',  '<%= media.area_location %>',  '<%= media.dimentions %>',  '<%= media.number_of_count %>' )" >
+                            <img src="../../assets/view.svg" class="action-icons-svg" alt="">
+                            </button>
+                        </div>
+                </td>
+                </tr>
+                <%  ser_no = ser_no + 1 %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= will_paginate @media_asset, class: 'custom-pagination' %>
+    <%#= will_paginate @media_asset ,  class: 'pagination'  %>
+</div>
+</div>
+
+
+
+
+
+<!-- Modal Start Add Aseet -->
+
+   <div class="modal fade bd-example-modal-lg" id="Add_Asset_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Add Meida Asset </h5>
+                <button type="button"  onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>   
+
+              <div class="modal-body">
+                <%= render 'media_asset/update_asset', form_method: 'post', form_action: 'Add', form_url: add_asset_path %>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default"  onclick="closeModal()"  data-dismiss="modal">Ccclose</button>
+                </div>
+              </div>
+  </div>
+   </div>
+  </div>
+<!-- Modal Close view-->

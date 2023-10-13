@@ -1,0 +1,330 @@
+
+
+<%= form_with(url:form_url , method:form_method ,  id:form_action , remote:true )  do |form| %>
+           
+                
+  <%  if form_action == "Add" %>
+              <div class="row  m-1 p-1" >
+                <div class="row pr-3 ">
+                  <%= form.label :customer_type, "Type Of Customer", class: "col-sm-4 col-form-label pr-0" %>
+                  <%= form.select :"#{form_action}_customer_type_details", options_for_select([["New"], ["Existing"]]), { prompt: "Select Customer Type" }, { class: 'custom-select', onchange: 'showContent(this.value)' , required: true} %>
+                </div>
+              </div>
+ <% end %>
+
+
+            
+
+
+            <div id= "<%= form_action %>_NewDiv"  >
+              <div class="bordercolor p-2 mt-2 border border-secondary border-2"> 
+                <h5 class="text-primary" id="<%= form_action %>_dynamic-heading"  ><u>Customer Info</u></h5> 
+
+                <div  id= "<%= form_action %>_SearchCust" style="display: none;" >
+                            <div  class= " p-2 border border-primary p-3"  >  
+                                <%  if form_action == "Add" %>
+                                  <div class="row">
+                                    <div class="col text-center">
+                                    <span class="text-danger" id="search_cust_error" class= "text-danger "></span>
+                                    </div>
+                                  </div>
+                    
+                                  <div class="row ">
+                                    <div class="col-md-6">
+                                      <%= form.label :state_eq, "State" %>
+                                      <%= form.select :customer_state_eq, options_for_select(select_all_state),  { prompt: "Select any State " }, class: "custom-select"   %>
+                                    </div> 
+                                    <div class="col-md-6">
+                                      <%= form.label :district_eq, "District" %>
+                                      <%= form.select :customer_district_eq, options_for_select(select_all_district), { prompt: "Select any district " }, class: "custom-select" %>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                    
+                                  <div class="row ">
+                                    <div class="col-md-6">
+                                      <%= form.label :customer_eq, "Customer Name"  %>
+                                      <%= form.select :first_name_eq, options_for_select([]), { prompt: "Select a Customer" }, class: 'custom-select' %>
+                                    </div> 
+                                  <div class="col-md-6 pt-4 ">
+                                    <%= form.submit "Search", class: 'btn btn-primary', id: 'search_existing_cust' %>
+                                  </div>
+                                </div>
+                    
+                                  </div>
+                                  <% end %>
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :first_name, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_first_name", class: "form-control", required: true%>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :last_name, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_last_name", class: "form-control", required: true %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :email, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.email_field :"#{form_action}_cust_email", class: "form-control", required: true %>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :contact, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                                <%= form.text_field :"#{form_action}_phone_number", class: "form-control", required: true %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class= "col">
+                            <div class="row">
+                              <%= form.label :customer_state, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                              <%= form.select :"#{form_action}_customer_state", options_for_select(select_all_state), { prompt: "Select State " }, class: "form-control", required: true %>
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :customer_district, class: "col-sm-3 col-form-label pr-0" %>
+                              <div class="col-sm-9 pl-0">
+                              <%= form.select :"#{form_action}_customer_district", options_for_select(select_all_district), { prompt: "Select District " }, class: "form-control" , required: true %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col">
+                            <div class="row">
+                              <%= form.label :client_address, class: "col-sm-2 col-form-label pr-0" %>
+                              <div class="col-sm-10 pl-0">
+                                <%= form.text_area :"#{form_action}_cust_address", class: "form-control", rows: 2  ,required: true%>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+  
+                <%= form.hidden_field :"#{form_action}_cust_id" %>
+                <%= form.hidden_field :"busi_id" %>
+
+                <div id="CompanyDetails" >
+                  <div class="bordercolor p-2 mt-3 border border-secondary border-2" id="new">
+                    <h5 class="text-primary"><u>Business Detail</u></h5>
+                   
+                 <%  if form_action == "Update" ||  form_action == "View" %>
+                    <div class="row mt-2">
+                        <div class="row">
+                          <%= form.label :select_business, class: "col-sm-3 col-form-label" %>
+                          <div class="col-sm-7 pl-0">
+                          <%= form.select :"#{form_action}_select_business", [], { prompt: "Select" }, class: "custom-select"%>
+                          </div>
+                       </div>
+                    </div>
+                    <% end %>
+
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_name, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_name", class: "form-control",required: true %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_type, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_sector", class: "form-control", required: true %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_mail, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.email_field :"#{form_action}_business_mail", class: "form-control", required: true %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_contact, class: "col-sm-3 col-form-label" %>
+                            <div class="col-sm-7 pl-0">
+                              <%= form.text_field :"#{form_action}_business_mobile_number", class: "form-control", required: true %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                      <div class= "col">
+                        <div class="row">
+                          <%= form.label :company_state, class: "col-sm-3 col-form-label pr-0" %>
+                          <div class="col-sm-9 pl-0">
+                          <%= form.select :"#{form_action}_business_state", options_for_select(select_all_state), { prompt: "Select State " }, class: "form-control", required: true %>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="row">
+                          <%= form.label :company_district, class: "col-sm-3 col-form-label pr-0" %>
+                          <div class="col-sm-9 pl-0">
+                          <%= form.select :"#{form_action}_business_district", options_for_select(select_all_district), { prompt: "Select District " }, class: "form-control", required: true%>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <div class="row">
+                            <%= form.label :company_address, class: "col-sm-3 col-form-label pr-0" %>
+                            <div class="col-sm-9 pl-0">
+                              <%= form.text_area :"#{form_action}_business_address", class: "form-control", rows: 2 , required: true%>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div >            
+              </div>
+                            <div id="customer_forms_button" style="display" > 
+                              <div class="modal-footer">
+                               <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal" id="<%= form_action %>_closeButton">Close</button>
+                                <%= form.submit 'Clear Form', type: 'reset', class: 'btn btn-dark', id: "#{form_action}_clearButton" %>
+                               <%= form.submit "#{form_action}_Detail",remote: true, class: "btn btn-primary" %>
+                              </div>
+                            </div>
+
+            <% end %>
+
+                 
+
+<script>
+
+
+function showContent(selectedOption) {
+
+  var search_cust = document.getElementById('Add_SearchCust');
+  var headingElement = document.getElementById("Add_dynamic-heading");
+  search_cust.style.display = 'none';
+  
+  if (selectedOption === 'New') {
+    headingElement.textContent = "New Client Info";
+    search_cust.style.display = 'none';
+  } else if (selectedOption === 'Existing') {
+    search_cust.style.display = 'block';
+    headingElement.textContent = "Existing Client Info";
+  }
+ // $('#Add_customer_type_details').val(selectedOption)
+
+}
+
+
+
+
+$('#first_name_eq').on('click', function() {
+    var selectedState = $('#customer_state_eq').val();
+    var selectedDistrict = $('#customer_district_eq').val();
+    
+    if (selectedState === '' || selectedDistrict === '') {
+        $('#search_cust_error').text('select the state and district ')
+        timeout_and_clear();
+     }
+    });
+
+$('#customer_district_eq').on("change", function() {
+ var state = $('#customer_state_eq').val()
+ var district = $('#customer_district_eq').val();
+
+   if (!state == ""){
+    $.ajax({
+      type:'get',
+      url:'/customer_by_state_dist',
+      data:{state: state,district: district, ajax_action:"cust_by_dist"},
+      dataType:'json',
+      success:function(res){
+        var options = '<option value= ""> select any customer </option>'
+          res.forEach(function(cust) {
+            options += '<option value="' + cust[1] + '">' + cust[0] + '</option>';
+          });
+          $('#first_name_eq').html(options);
+
+      }
+   })
+
+   }
+  else{
+    $('#search_cust_error').text('select the state before proceding ')
+    $('#customer_district_eq').prop('selectedIndex', 0)
+    timeout_and_clear();
+  }
+})
+
+$('#search_existing_cust').on('click', function(event) {
+  event.preventDefault();
+  var custId = document.getElementById("first_name_eq")
+  var id = custId.value;
+
+  if (!id=="" )
+      $.ajax({
+        type: 'get',
+        url: 'customer_by_state_dist',
+        data: {id:id, ajax_action:"cust_by_id"},
+        dataType: 'json',
+        success: function(cust) {
+        $('#Add_first_name').val(cust.first_name);
+        $('#Add_last_name').val(cust.last_name);
+        $('#Add_phone_number').val(cust.phone_number);
+        $('#Add_cust_email').val(cust.cust_email);
+        $('#Add_customer_state').val(cust.customer_state);
+        $('#Add_customer_district').val(cust.customer_district);
+        $('#Add_cust_address').val(cust.cust_address);
+        $('#Add_cust_id').val(cust.id);
+
+        }
+      })
+    else {
+      $('#search_cust_error').text('select any customer first ')
+      timeout_and_clear();
+
+    }
+}) 
+
+
+
+
+
+
+</script>
